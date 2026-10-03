@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Job Postings{% endblock %}
+{% block content %}
+<header class="topbar">
+  <div><div class="eyebrow">JOB DESCRIPTION ANALYSIS · MATCHING &amp; SKILL ANALYSIS</div><h1>Candidate–Job Matching</h1><p>Analyze a raw job description, generate structured requirements, then rank candidates and inspect skill gaps.</p></div>
+  <span class="ready"><i></i> Matching Engine Ready</span>
+</header>
+
+<section class="card jd-analyzer-card">
+  <div class="profile-head">
+    <div><div class="eyebrow">AUTOMATIC JD ANALYSIS</div><h2>Analyze Job Description</h2><p>Paste a job description or upload a PDF/DOCX. The parser extracts skills, experience, qualifications, location and responsibilities.</p></div>
+    <span class="jd-badge">PDF · DOCX · TEXT</span>
+  </div>
+  <div class="jd-input-grid">
+    <div>
+      <label class="jd-label">Job Description Text <span class="hint">paste the complete JD</span></label>
+      <textarea id="jdText" class="jd-textarea" rows="11" placeholder="Example:\nPython API Developer\n\nRequirements:\n- 2+ years of Python experience\n- Bachelor’s degree in Computer Science\n- Python, Django, REST APIs, SQL and Git\n\nResponsibilities:\n- Build REST APIs and backend services\n- Work with databases and Agile teams"></textarea>
+    </div>
+    <div class="jd-upload-panel">
+      <label class="jd-label">Or Upload Job Description</label>
+      <label class="jd-drop" for="jdFile">
+        <span class="jd-upload-icon">↑</span>
+        <strong>Choose PDF or DOCX</strong>
+        <small id="jdFileName">No file selected</small>
+      </label>
+      <input id="jdFile" type="file" accept=".pdf,.docx" hidden>
+      <button class="parse" type="button" id="analyzeJD">Analyze Job Description</button>
+      <div id="jdMessage" class="message hidden"></div>
+    </div>
+  </div>
+  <div id="jdProfile" class="jd-profile hidden"></div>
+</section>
+
+<div class="matching-layout">
+  <section class="card job-form-card">
+    <div class="title"><div class="icon">▣</div><div><h2>Create Job Requirement</h2><p>Use the analyzed profile or enter requirements manually.</p></div></div>
+    <form id="jobForm">
+      <label>Job Title<input id="jobTitle" required placeholder="e.g. Python Developer"></label>
+      <label>Required Skills <span class="hint">comma separated</span><textarea id="jobSkills" required placeholder="Python, SQL, Django, REST API, Git"></textarea></label>
+      <div class="form-grid">
+        <label>Minimum Experience (years)<input id="jobExperience" type="number" min="0" step="0.5" value="0"></label>
+        <label>Education <input id="jobEducation" placeholder="e.g. Bachelor"></label>
+      </div>
+      <label>Location <span class="hint">optional</span><input id="jobLocation" placeholder="e.g. Hyderabad"></label>
+      <label>Job Description <span class="hint">optional</span><textarea id="jobDescription" rows="5" placeholder="Describe the main responsibilities and requirements..."></textarea></label>
+      <button class="parse" type="submit" id="createJob">Create Job &amp; Match Candidates</button>
+      <div id="jobMessage" class="message hidden"></div>
+    </form>
+  </section>
+
+  <section class="card results-card">
+    <div class="profile-head"><div><div class="eyebrow">HIRING SCORE</div><h2 id="resultsTitle">Matching Results</h2><p>Weighted score: skills 60% · experience 25% · education 10% · location 5%</p></div></div>
+    <div id="resultsEmpty" class="empty small-empty"><div>⌁</div><h3>No matching results yet</h3><p>Analyze a JD and create a job requirement to rank your candidates.</p></div>
+    <div id="results" class="hidden"></div>
+  </section>
+</div>
+
+<section class="card skill-gap-card">
+  <div class="profile-head"><div><div class="eyebrow">SKILL-GAP ANALYSIS</div><h2>Candidate Skill Gap Report</h2><p>Select a candidate from the matching results to inspect required and missing skills.</p></div></div>
+  <div id="gapEmpty" class="empty small-empty"><div>⌁</div><h3>Select a candidate</h3><p>The skill-gap report will appear here after matching.</p></div>
+  <div id="gapReport" class="hidden"></div>
+</section>
+{% endblock %}
+{% block page_scripts %}<script src="{{ url_for('static', filename='matching.js') }}"></script>{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · AI Recruitment Copilot{% endblock %}
+{% block content %}
+<header class="topbar dashboard-topbar">
+  <div><div class="eyebrow">AI RECRUITMENT COPILOT</div><h1>Dashboard</h1><p>Automate candidate screening, matching, interviews and recruitment analytics.</p></div>
+  <div class="top-actions"><a class="export-btn" href="{{ url_for('api_candidates') }}">⇩ Export</a><a class="new-job-btn" href="{{ url_for('jobs_page') }}">＋ New Job Posting</a></div>
+</header>
+
+<section class="stats-grid">
+  <article class="stat-card"><div class="stat-label">Resumes Processed</div><strong>{{ resume_count }}</strong><span class="trend">↑ Active candidate profiles</span></article>
+  <article class="stat-card"><div class="stat-label">Active Job Postings</div><strong>{{ job_count }}</strong><span class="trend">↑ Matching-ready jobs</span></article>
+  <article class="stat-card"><div class="stat-label">Interviews Completed</div><strong>{{ interview_count }}</strong><span class="trend">↑ 20-question interviews</span></article>
+  <article class="stat-card"><div class="stat-label">Hiring Success Rate</div><strong>{{ success_rate }}%</strong><span class="trend">↑ Candidates with strong matches</span></article>
+</section>
+
+<section class="dashboard-grid">
+  <article class="card dashboard-panel">
+    <div class="panel-head"><div><div class="eyebrow">CANDIDATE PIPELINE</div><h2>Candidate Overview</h2></div><a href="{{ url_for('candidates') }}">View all →</a></div>
+    <div class="pipeline"><div><b>{{ resume_count }}</b><span>Total Profiles</span></div><div><b>{{ strong_matches }}</b><span>Strong Matches</span></div><div><b>{{ internship_count }}</b><span>Internship Profiles</span></div></div>
+    <div class="progress-line"><span>Profiles ready for matching</span><b>{{ readiness }}%</b><div><i style="width:{{ readiness }}%"></i></div></div>
+  </article>
+  <article class="card dashboard-panel">
+    <div class="panel-head"><div><div class="eyebrow">INTERVIEW & SCREENING</div><h2>Recruitment Activity</h2></div><a href="{{ '/interview' }}">Open interviews →</a></div>
+    <div class="activity-metrics">
+      <div><b>{{ interview_count }}</b><span>Completed interviews</span></div>
+      <div><b>{{ average_interview_score }}%</b><span>Average interview score</span></div>
+      <div><b>{{ voice_count }}</b><span>Voice screening responses</span></div>
+    </div>
+    <div class="quick-actions compact-actions">
+      <a href="{{ url_for('upload_page') }}"><span>↑</span><div><b>Upload Resume</b><small>Parse a new candidate</small></div></a>
+      <a href="{{ url_for('jobs_page') }}"><span>▣</span><div><b>Create Job</b><small>Start candidate matching</small></div></a>
+      <a href="{{ '/interview' }}"><span>◉</span><div><b>Interview Assistant</b><small>Generate questions and evaluate interviews</small></div></a>
+    </div>
+  </article>
+</section>
+
+<section class="card recent-panel">
+  <div class="panel-head"><div><div class="eyebrow">CANDIDATE ANALYTICS</div><h2>Hiring Scores & Skill Gaps</h2></div><a href="{{ url_for('candidate_insights') }}">Open insights →</a></div>
+  {% if candidate_rows %}
+  <div class="candidate-ranking-table">
+    <div class="candidate-ranking-head"><span>Candidate</span><span>Best Job Match</span><span>Hiring Score</span><span>Matched Skills</span><span>Skill Gaps</span></div>
+    {% for row in candidate_rows %}
+    <div class="candidate-ranking-row">
+      <span><b>{{ row.name }}</b><small>{{ row.email }}</small></span>
+      <span>{{ row.job }}</span>
+      <span><strong class="score-badge {{ 'score-high' if row.score >= 80 else 'score-mid' if row.score >= 65 else 'score-low' }}">{{ row.score }}%</strong><small>{{ row.recommendation }}</small></span>
+      <span>{% if row.matched_skills %}{{ row.matched_skills|join(', ') }}{% else %}None detected{% endif %}</span>
+      <span>{% if row.missing_skills %}{{ row.missing_skills|join(', ') }}{% else %}No major gaps{% endif %}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty dashboard-empty"><div>♙</div><h3>No candidate profiles yet</h3><p>Upload resumes to populate hiring scores, candidate rankings and skill-gap analysis.</p><a class="new-job-btn" href="{{ url_for('upload_page') }}">↑ Upload Resume</a></div>
+  {% endif %}
+</section>
+
+<section class="dashboard-grid dashboard-bottom-grid">
+  <article class="card recent-panel">
+    <div class="panel-head"><div><div class="eyebrow">RECRUITMENT WORKFLOW</div><h2>Quick Actions</h2></div></div>
+    <div class="workflow-cards">
+      <a href="{{ url_for('upload_page') }}"><b>01</b><strong>Resume Parsing</strong><span>Upload and create a structured candidate profile.</span></a>
+      <a href="{{ url_for('jobs_page') }}"><b>02</b><strong>Candidate Matching</strong><span>Compare candidates against job requirements.</span></a>
+      <a href="{{ '/interview' }}"><b>03</b><strong>Interview Assistance</strong><span>Generate role-specific questions and evaluate answers.</span></a>
+    </div>
+  </article>
+  <article class="card recent-panel">
+    <div class="panel-head"><div><div class="eyebrow">RECENT ACTIVITY</div><h2>Latest Job Postings</h2></div><a href="{{ url_for('jobs_page') }}">Manage jobs →</a></div>
+    {% if jobs %}<div class="job-table"><div class="job-table-head"><span>Job</span><span>Required Skills</span><span>Experience</span><span>Status</span></div>{% for job in jobs[:5] %}<div class="job-row"><span><b>{{ job.title }}</b><small>{{ job.location or 'Location not specified' }}</small></span><span>{{ job.required_skills|join(', ') }}</span><span>{{ job.min_experience or 0 }}+ yrs</span><span class="status-pill">Active</span></div>{% endfor %}</div>{% else %}<div class="empty dashboard-empty"><div>▣</div><h3>No job postings yet</h3><p>Create your first job to start matching candidates.</p><a class="new-job-btn" href="{{ url_for('jobs_page') }}">＋ Create Job</a></div>{% endif %}
+  </article>
+</section>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Candidate Database{% endblock %}
+{% block content %}
+<header class="topbar">
+  <div>
+    <div class="eyebrow">PERSISTENT CANDIDATE STORAGE</div>
+    <h1>Candidate Database</h1>
+    <p>Candidate profiles are stored in a local SQLite database and can be retrieved for ATS screening, matching and interviews.</p>
+  </div>
+  <a class="ready link" href="/upload">＋ Add Candidate</a>
+</header>
+
+<section class="storage-cards">
+  <div class="card storage-card"><span>DATABASE</span><strong>SQLite</strong><small>{{ db_file }} · persistent local storage</small></div>
+  <div class="card storage-card"><span>CANDIDATES</span><strong>{{ candidates|length }}</strong><small>Structured profiles currently stored</small></div>
+  <div class="card storage-card"><span>RESUME FILES</span><strong>{{ candidates|selectattr('resume_path')|list|length }}</strong><small>Original PDF/DOCX paths linked to profiles</small></div>
+  <div class="card storage-card"><span>ATS READY</span><strong>Yes</strong><small>Profiles can be scored and synced to ATS</small></div>
+</section>
+
+<section class="card database-card">
+  <div class="db-head">
+    <div><div class="eyebrow">CANDIDATE RECORDS</div><h2>Stored Candidate Information</h2><p>Each record keeps contact details, education, skills, experience, projects, certifications, resume metadata and timestamps.</p></div>
+    <input id="candidateSearch" class="db-search" placeholder="Search name, email or skill...">
+  </div>
+  <div class="database-table-wrap">
+    <table class="database-table" id="candidateTable">
+      <thead><tr><th>ID</th><th>Candidate</th><th>Contact</th><th>Skills</th><th>Experience</th><th>Confidence</th><th>Updated</th></tr></thead>
+      <tbody>
+      {% for c in candidates %}
+        <tr data-search="{{ (c.name ~ ' ' ~ c.email ~ ' ' ~ (c.skills|join(' ')))|lower }}">
+          <td><span class="id-pill">C{{ '%04d'|format(c.candidate_id|int) }}</span></td>
+          <td><b>{{ c.name }}</b><small>{{ c.location }}</small></td>
+          <td><span>{{ c.email }}</span><small>{{ c.phone }}</small></td>
+          <td><div class="db-chips">{% for s in c.skills[:5] %}<span>{{ s }}</span>{% endfor %}{% if c.skills|length > 5 %}<span>+{{ c.skills|length - 5 }}</span>{% endif %}</div></td>
+          <td>{% if c.experience.total_experience %}{{ c.experience.total_experience }}{% elif c.experience.roles or c.experience.details %}Experience detected{% elif c.experience.internships %}Internship experience only{% else %}Not detected{% endif %}</td>
+          <td><strong class="confidence-pill">{{ c.confidence }}%</strong></td>
+          <td><small>{{ c.updated_at or '—' }}</small></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="7" class="db-empty">No candidates stored yet. Upload a PDF/DOCX resume to create the first candidate record.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card storage-flow">
+  <div class="eyebrow">HOW CANDIDATE INFORMATION IS STORED</div>
+  <h2>Resume → Parser → Candidate Record → ATS / Matching</h2>
+  <div class="storage-steps">
+    <div><b>01</b><strong>Upload Resume</strong><span>PDF/DOCX is saved in the uploads folder.</span></div>
+    <div><b>02</b><strong>Parse & Structure</strong><span>Name, contact, skills, education, experience and projects are extracted.</span></div>
+    <div><b>03</b><strong>Store in SQLite</strong><span>Each candidate receives a unique Candidate ID and timestamp.</span></div>
+    <div><b>04</b><strong>Use Anywhere</strong><span>ATS scoring, job matching, skill gaps, interviews and reports use the stored profile.</span></div>
+  </div>
+  <div class="storage-note"><b>Database file:</b> <code>{{ database_path }}</code><br><b>Backup/export:</b> JSON and CSV copies are also maintained for demo and spreadsheet analysis.</div>
+</section>
+{% endblock %}
+{% block page_scripts %}
+<script>
+const search = document.getElementById('candidateSearch');
+search?.addEventListener('input', () => {
+  const q = search.value.trim().toLowerCase();
+  document.querySelectorAll('#candidateTable tbody tr[data-search]').forEach(row => row.style.display = !q || row.dataset.search.includes(q) ? '' : 'none');
+});
+</script>
+{% endblock %}

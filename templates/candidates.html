@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Candidates{% endblock %}
+{% block content %}
+<header class="topbar"><div><div class="eyebrow">CANDIDATE DATABASE</div><h1>Structured Candidate Profiles</h1><p>All information extracted from uploaded resumes.</p></div><a class="ready link" href="/">＋ Upload Resume</a></header>
+<div class="candidate-grid">
+{% for c in candidates %}<article class="card candidate-card"><div class="identity"><div class="avatar">{{ (c.name or 'CN')[:2]|upper }}</div><div class="person"><h2>{{ c.name }}</h2><small>{{ c.location }}</small></div></div>
+<div class="contact-block"><span>✉ {{ c.email }}</span><span>☎ {{ c.phone }}</span></div>
+<div class="detail"><h3>🎓 Education</h3>{% for x in c.education %}<p>{{ x }}</p>{% else %}<p class="muted">Not detected</p>{% endfor %}</div>
+<div class="detail"><h3>‹/› Skills</h3><div class="chips">{% for x in c.skills %}<span>{{ x }}</span>{% else %}<span>Not detected</span>{% endfor %}</div></div>
+<div class="detail"><h3>▣ Experience</h3>{% if c.experience.roles or c.experience.details %}<p><b>{{ c.experience.total_experience or 'Experience detected' }}</b></p>{% else %}<p class="muted">Professional experience not detected</p>{% endif %}{% for x in c.experience.roles %}<p>{{ x }}</p>{% endfor %}{% if c.experience.details %}{% for x in c.experience.details %}{% if x not in c.experience.roles %}<p>{{ x }}</p>{% endif %}{% endfor %}{% endif %}{% if c.experience.internships %}<p><b>Internships</b></p>{% for x in c.experience.internships %}<p>{{ x }}</p>{% endfor %}{% endif %}{% if not c.experience.roles and not c.experience.details and not c.experience.internships %}<p class="muted">Not detected</p>{% endif %}</div>
+<div class="detail"><h3>✚ Certifications</h3>{% for x in c.certifications %}<p>{{ x }}</p>{% else %}<p class="muted">Not detected</p>{% endfor %}</div>
+<div class="detail"><h3>▰ Projects</h3>{% for x in c.projects %}<p>{{ x }}</p>{% else %}<p class="muted">Not detected</p>{% endfor %}</div>
+<div class="confidence">Extraction completeness <b>{{ c.confidence }}%</b></div><div class="candidate-actions"><a href="{{ url_for('candidate_dashboard', index=loop.index0) }}">Open Candidate Dashboard →</a><a href="{{ url_for('analysis_report', index=loop.index0) }}">View Report</a><a href="{{ url_for('download_analysis_report', index=loop.index0) }}">⇩ PDF</a></div></article>{% else %}<section class="card empty"><h3>No candidates yet</h3><p>Upload a resume to create a profile.</p></section>{% endfor %}
+</div>
+{% endblock %}

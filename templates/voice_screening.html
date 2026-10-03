@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Voice Screening · AI Recruitment Copilot{% endblock %}
+{% block content %}
+<header class="topbar"><div><div class="eyebrow">VOICE SCREENING</div><h1>Voice Screening</h1><p>Ask role-specific questions, record candidate responses, and save screening results.</p></div><div class="top-actions"><a class="export-btn" href="{{ url_for('dashboard') }}">← Dashboard</a></div></header>
+<section class="card voice-screen-card">
+  <div class="voice-controls">
+    <label>Job Role<select id="voiceJob">{% for job in jobs %}<option value="{{ job.id }}">{{ job.title }}</option>{% endfor %}</select></label>
+    <label>Candidate<select id="voiceCandidate">{% for c in candidates %}<option value="{{ c.name|e }}">{{ c.name }}</option>{% endfor %}</select></label>
+  </div>
+  <div class="voice-question" id="voiceQuestion">Select a role and start the screening.</div>
+  <div class="voice-answer" id="voiceAnswer">Your spoken answer will appear here. You can also type an answer if microphone speech recognition is unavailable.</div>
+  <div class="voice-actions"><button class="primary-purple-btn" id="speakBtn" type="button">🔊 Ask Question</button><button class="secondary-btn" id="recordBtn" type="button">🎙 Start Recording</button><button class="primary-purple-btn" id="saveVoiceBtn" type="button" disabled>Save Answer →</button></div>
+  <div class="voice-status" id="voiceStatus">Ready.</div>
+  <div class="voice-progress"><span id="voiceCounter">Question 1</span><div><i id="voiceProgressBar"></i></div></div>
+</section>
+{% endblock %}
+{% block page_scripts %}
+<script>
+(() => {
+  const jobs={{ jobs|tojson }};
+  const jobSelect=document.getElementById('voiceJob'), candidateSelect=document.getElementById('voiceCandidate');
+  const qBox=document.getElementById('voiceQuestion'), aBox=document.getElementById('voiceAnswer'), status=document.getElementById('voiceStatus');
+  const saveBtn=document.getElementById('saveVoiceBtn'), speakBtn=document.getElementById('speakBtn'), recordBtn=document.getElementById('recordBtn');
+  const counter=document.getElementById('voiceCounter'), bar=document.getElementById('voiceProgressBar');
+  let questions=[],index=0,answer='';
+  const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  function currentJob(){return jobs.find(j=>String(j.id)===String(jobSelect.value))||{};}
+  async function loadQuestions(force=false){
+    const id=jobSelect.value;if(!id)return;
+    status.textContent='Generating role-specific screening questions…'; speakBtn.disabled=true; saveBtn.disabled=true;
+    try{
+      const res=await fetch(`/api/voice-screening/questions/${id}?v=20`,{cache:'no-store',headers:{'Accept':'application/json'}}); const data=await res.json();
+      if(!res.ok||!data.success)throw new Error(data.error||'Could not generate screening questions.');
+      if(!Array.isArray(data.questions)||data.questions.length!==20)throw new Error(`Expected 20 screening questions, received ${data.questions?.length||0}.`);
+      questions=data.questions;index=0;answer='';render();status.textContent='20 role-specific questions generated. Click Ask Question.';speakBtn.disabled=false;
+    }catch(e){console.error(e);questions=[];qBox.textContent='Could not generate questions. Please try again.';status.textContent=e.message||'Question generation failed.';speakBtn.disabled=false;}
+  }
+  function render(){
+    const q=questions[index];if(!q){qBox.textContent='Select a role and click Ask Question.';return;}
+    qBox.textContent=`Question ${index+1} of ${questions.length}: ${q.question}`;
+    aBox.textContent='Your spoken answer will appear here. You can also type an answer if microphone speech recognition is unavailable.';answer='';saveBtn.disabled=true;
+    counter.textContent=`Question ${index+1} of ${questions.length}`;bar.style.width=`${((index+1)/questions.length)*100}%`;
+  }
+  async function askQuestion(){
+    if(!questions.length) await loadQuestions(true);
+    const q=questions[index];if(!q)return;
+    qBox.textContent=`Question ${index+1} of ${questions.length}: ${q.question}`;status.textContent='Question generated.';
+    if('speechSynthesis' in window){speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(q.question));status.textContent='Question generated and spoken.';}
+  }
+  speakBtn.onclick=askQuestion;
+  recordBtn.onclick=()=>{
+    if(!questions.length){status.textContent='Click Ask Question first.';return;}
+    if(!Recognition){status.textContent='Speech recognition is not supported in this browser. Type your answer instead.';aBox.focus();return;}
+    const r=new Recognition();r.lang='en-US';r.interimResults=false;r.maxAlternatives=1;status.textContent='Listening…';recordBtn.disabled=true;
+    r.onresult=e=>{answer=e.results[0][0].transcript;aBox.textContent=answer;saveBtn.disabled=!answer.trim();status.textContent='Answer captured. Click Save Answer.';};
+    r.onerror=()=>{status.textContent='Could not capture speech. You can type the answer instead.';recordBtn.disabled=false;};r.onend=()=>{recordBtn.disabled=false};r.start();
+  };
+  aBox.addEventListener('input',()=>{answer=aBox.textContent.trim();saveBtn.disabled=!answer});
+  saveBtn.onclick=async()=>{
+    const q=questions[index];answer=aBox.textContent.trim();if(!q||!answer)return;
+    saveBtn.disabled=true;status.textContent='Saving answer…';
+    try{const res=await fetch('/api/voice-screening/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({candidate:candidateSelect.value,job:currentJob().title,question:q.question,answer,input_source:'voice-or-text'})});const data=await res.json();if(!res.ok||!data.success)throw new Error(data.error||'Could not save answer.');
+      if(index<questions.length-1){index++;render();status.textContent='Answer saved. Next question ready.';}else{status.textContent='Voice screening completed. All 20 answers saved.';qBox.textContent='Screening completed';aBox.textContent='All responses saved successfully.';counter.textContent='20 questions completed';bar.style.width='100%';}
+    }catch(e){status.textContent=e.message||'Could not save answer.';saveBtn.disabled=false;}
+  };
+  jobSelect.addEventListener('change',()=>{questions=[];index=0;render();status.textContent='Role changed. Click Ask Question to generate questions.';});
+  render();
+})();
+</script>
+{% endblock %}

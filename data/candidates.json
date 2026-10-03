@@ -1,0 +1,467 @@
+[
+  {
+    "candidate_id": 2,
+    "name": "AJAY KUMAR",
+    "headline": "",
+    "email": "ajaykumar@gmail.com",
+    "phone": "+91 9876543210",
+    "location": "Delhi",
+    "education": [
+      "Bachelor of Technology – Computer Science and Engineering | Sri Indu Engineering College | 2019–2023"
+    ],
+    "skills": [
+      "JavaScript",
+      "REST API",
+      "GitHub",
+      "MySQL",
+      "Django",
+      "Flask",
+      "Python",
+      "SQL",
+      "Git",
+      "Communication"
+    ],
+    "experience": {
+      "total_experience": null,
+      "roles": [
+        "HRIC – SOFTWARE DEVELOPER",
+        "Followed SDLC, Agile, and Scrum methodologies throughout the software development lifecycle"
+      ],
+      "details": [
+        "HRIC – SOFTWARE DEVELOPER",
+        "Developed and maintained web applications using Python, JavaScript, Django, Flask, HTML5, and CSS3.",
+        "Designed and implemented application features based on functional requirements.",
+        "Developed REST APIs and integrated frontend and backend components using JSON and HTTP methods.",
+        "Worked with MySQL and SQL for database design, CRUD operations, queries, and data validation.",
+        "Debugged application issues, identified root causes, and implemented effective solutions.",
+        "Used Git and GitHub for version control and source-code management.",
+        "Performed functional and integration testing to ensure application quality and reliability.",
+        "Followed SDLC, Agile, and Scrum methodologies throughout the software development lifecycle"
+      ],
+      "internships": []
+    },
+    "certifications": [
+      "Full Stack Application Development",
+      "Software developer"
+    ],
+    "projects": [
+      "Hotel Royal Stay – Full Stack Booking System",
+      "Developed a Django-based web application using Python, SQL, and Object-Oriented Programming for user authentication, room search,",
+      "reservations, and administrative functionality.",
+      "Integrated MySQL to manage rooms, guests, reservations, payments, occupancy, and revenue data.",
+      "Worked with application workflows involving user inputs, authentication, database operations, and reservation processing.",
+      "Validated application data and database operations using SQL queries and debugging techniques.",
+      "Applied SDLC, Git, GitHub, and software development practices throughout application development.",
+      "Forest Fire Spread Prediction Model – AI/ML Simulation",
+      "Developed a Python-based AI/ML model combining cellular automata simulation and machine learning to model forest fire propagation.",
+      "Processed environmental and geospatial datasets and performed data preparation for model training and evaluation.",
+      "Evaluated model outputs and analyzed prediction patterns to identify potential inconsistencies and performance behavior.",
+      "Applied structured problem-solving and debugging approaches during model development."
+    ],
+    "languages": [],
+    "confidence": 100.0,
+    "source_file": "resume4.pdf",
+    "resume_path": "C:\\Users\\Manas\\Downloads\\AI-DRIVEN-SMART-HIRING-PLATFORM-MCQ-NEXT-QUESTION-FIXED\\uploads\\resume4.pdf",
+    "raw_text_preview": "AJAY KUMAR \n+91 9876543210 | \najaykumar@gmail.com| Delhi \nPROFESSIONAL SUMMARY \nComputer Science (Artificial Intelligence and Machine Learning) graduate with a strong foundation in software development, SQL, Python, Object-\nOriented Programming, SDLC, Agile, Git, GitHub, MySQL, and API testing using Postman. Experienced in developing web applications, working with \ndatabases, validating structured data, troubleshooting application workflows, and applying analytical problem-solving skills. Familiar with software \ntesting concepts including STLC, functional testing, test case design, bug identification, debugging, and REST API testing. Eager to contribute to \nsoftware quality and test automation while learning new testing technologies. \nTECHNICAL SKILLS \nProgramming: Python, JavaScript \nSoftware Testing: STLC, SDLC, Functional Testing, Test Case Design, Bug Identification, Debugging, Software Quality Concepts \nAPI Testing: Postman, REST API Testing, HTTP Methods, Request and Response Validation, JSON \nDatabase: SQL, MySQL, RDBMS, CRUD Operations, Data Validation \nVersion Control: Git, GitHub \nWeb Development: Django, Flask, HTML5, CSS3 \nMethodologies: Agile, Scrum, SDLC \nfSoft Skills: Analytical and Problem-Solving Skills | Debugging and Troubleshooting | Database Concepts |Quick Learner | Written and Verbal \nCommunication | Team Collaboration | Willingness to Learn New Technologies \nEDUCATION \nBachelor of Technology – Computer Science and Engineering | Sri Indu Engineering College | 2019–2023 \nEXPERIENCE \nHRIC – SOFTWARE DEVELOPER \n• \nDeveloped and maintained web applications using Python, JavaScript, Django, Flask, HTML5, and CSS3. \n• \nDesigned and implemented application features based on functional requirements. \n• \nDeveloped REST APIs and integrated frontend and backend components using JSON and HTTP methods. \n• \nWorked with MySQL and SQL for database design, CRUD operations, queries, and data validation. \n• \nDebugged application issues, identified root causes, and implemented effective solutions. \n• \nUsed Git and GitHub for version control and source-code management. \n• \nPerformed functional and integration testing to ensure application quality and reliability. \n• \nFollowed SDLC, Agile, and Scrum methodologies throughout the software development lifecycle \n\nPROJECTS \nHotel Royal Stay – Full Stack Booking System \n• Developed a Django-based web application using Python, SQL, and Object-Oriented Programming for user authentication, room search, \nreservations, and administrative functionality. \n• Integrated MySQL to manage rooms, guests, reservations, payments, occupancy, and revenue data. \n• Worked with application workflows involving user inputs, authentication, database operations, and reservation processing. \n• Validated application data and database operations using SQL queries and debugging techniques. \n• Applied SDLC, Git, GitHub, and software development practices throughout application development. \nForest Fire Spread Prediction Model – AI/ML Simulation \n• Developed a Python-based AI/ML model combining cellular automata simulation and machine learning to model forest fire propagation. \n• Processed environmental and geospatial datasets and performed data preparation for model training and evaluation. \n• Evaluated model outputs and analyzed prediction patterns to identify potential inconsistencies and performance behavior. \n• Applied structured problem-solving and debugging approaches during model development. \nCERTIFICATIONS \n• Full Stack Application Development \n• Software developer",
+    "created_at": "2026-10-02T07:58:55+00:00",
+    "updated_at": "2026-10-03T07:35:02+00:00"
+  },
+  {
+    "candidate_id": 3,
+    "name": "ADAPA MANASVI",
+    "headline": "",
+    "email": "manasvinaidu27@gmail.com",
+    "phone": "+91 7731880118",
+    "location": "Hyderabad, Telangana, India",
+    "education": [
+      "Bachelor of Technology (Computer Science Engineering)",
+      "Jawaharlal Nehru Technological University Anantapur"
+    ],
+    "skills": [
+      "PostgreSQL",
+      "JavaScript",
+      "GitHub",
+      "MySQL",
+      "Django",
+      "Flask",
+      "Python",
+      "SQL",
+      "Git"
+    ],
+    "experience": {
+      "total_experience": null,
+      "roles": [],
+      "details": [],
+      "internships": []
+    },
+    "certifications": [
+      "Advanced Data Analytics Internship – EDUNET Foundation, EY-GDS & AICTE",
+      "Python Programming",
+      "SQL & Database Management",
+      "Full Stack Web Development",
+      "Data Analytics",
+      "Soft Skills",
+      "Communication",
+      "Problem Solving",
+      "Teamwork",
+      "Leadership",
+      "Adaptability",
+      "Time Management"
+    ],
+    "projects": [
+      "Royal Stay Hotel Management System",
+      "Live Project",
+      "Developed a hotel booking and management system using Django.",
+      "Implemented room reservations, room management, and admin dashboard.",
+      "Integrated MySQL database and deployed on Render.",
+      "City Run Smart Ticket System",
+      "Developed an online transportation ticket booking platform.",
+      "Implemented ticket generation, booking workflow, and user management.",
+      "Built responsive frontend and backend integration using Django.",
+      "Personal Portfolio Website",
+      "Designed and developed a responsive personal portfolio website.",
+      "Showcased projects, technical skills, certifications, and achievements.",
+      "Forest Fire Prediction Model Based on Cellular Automata and Machine Learning",
+      "Developed a predictive forest fire model using Machine Learning.",
+      "Combined Cellular Automata techniques with predictive analytics.",
+      "Improved prediction accuracy through data preprocessing."
+    ],
+    "languages": [],
+    "confidence": 89.0,
+    "source_file": "resume (1).pdf",
+    "resume_path": "C:\\Users\\Manas\\Downloads\\AI-DRIVEN-SMART-HIRING-PLATFORM-MCQ-NEXT-QUESTION-FIXED\\uploads\\resume (1).pdf",
+    "raw_text_preview": "ADAPA MANASVI\n+91 7731880118\n—\nmanasvinaidu27@gmail.com\nGitHub\n—\nLinkedIn\n—\nPortfolio\nHyderabad, Telangana, India\nProfessional Summary\nComputer Science Engineering graduate with hands-on experience in Full Stack Development, Data Analytics, Cloud\nTechnologies, and Database Management. Skilled in Python, Django, JavaScript, SQL, HTML, CSS, and modern web\napplication development. Experienced in building and deploying scalable applications and solving real-world problems\nthrough technology.\nTechnical Skills\nLanguages: Python, JavaScript, SQL, HTML5, CSS3\nFrameworks: Django, Flask, Bootstrap\nDatabases: MySQL, PostgreSQL\nTools: Git, GitHub, VS Code, Render\nConcepts: OOP, REST APIs, CRUD Operations, Data Analytics\nProjects\nRoyal Stay Hotel Management System\nLive Project\n• Developed a hotel booking and management system using Django.\n• Implemented room reservations, room management, and admin dashboard.\n• Integrated MySQL database and deployed on Render.\nCity Run Smart Ticket System\nLive Project\n• Developed an online transportation ticket booking platform.\n• Implemented ticket generation, booking workflow, and user management.\n• Built responsive frontend and backend integration using Django.\nPersonal Portfolio Website\nLive Project\n• Designed and developed a responsive personal portfolio website.\n• Showcased projects, technical skills, certifications, and achievements.\nForest Fire Prediction Model Based on Cellular Automata and Machine Learning\n• Developed a predictive forest fire model using Machine Learning.\n• Combined Cellular Automata techniques with predictive analytics.\n• Improved prediction accuracy through data preprocessing.\nEducation\nBachelor of Technology (Computer Science Engineering)\nJawaharlal Nehru Technological University Anantapur\nCertifications\nAdvanced Data Analytics Internship – EDUNET Foundation, EY-GDS & AICTE\nPython Programming\n•\nSQL & Database Management\nFull Stack Web Development\n•\nData Analytics\nSoft Skills\nCommunication\n•\nProblem Solving\n•\nTeamwork\nLeadership\n•\nAdaptability\n•\nTime Management",
+    "created_at": "2026-10-02T07:59:13+00:00",
+    "updated_at": "2026-10-03T06:24:59+00:00"
+  },
+  {
+    "candidate_id": 7,
+    "name": "Pedditi Shruthi Reddy",
+    "headline": "",
+    "email": "Shruthireddyreddy233@gmail.com",
+    "phone": "+91-6309088335",
+    "location": "Hyderabad, Telangana",
+    "education": [
+      "Veda Degree College, Osmania University, Hyderabad",
+      "Bachelor of Science – B.Sc. Computer Science, 86%",
+      "Sri Vidya Junior College, Telangana",
+      "2021",
+      "Intermediate – MPC, 78.5%",
+      "Little Flower Grammar High School, Telangana",
+      "2018",
+      "SSC-88% 2016"
+    ],
+    "skills": [
+      "Excel",
+      "C++",
+      "C"
+    ],
+    "experience": {
+      "total_experience": "1.1 years",
+      "roles": [
+        "PROCESS EXECUTIVE | WIPRO | April 2022– October 2022",
+        "PRIME LEARNING |Business Development Associate |October 2021 – March 2022",
+        "Supported day-to-day business operations, customer communication, and coordination with internal stakeholders."
+      ],
+      "details": [
+        "PROCESS EXECUTIVE | WIPRO | April 2022– October 2022",
+        "Reviewing and processing Google Shopping/product-related information",
+        "Checking product listings, attributes, prices, categories, or policy compliance",
+        "Identifying incorrect or missing information",
+        "Updating records/tools accurately",
+        "Meeting productivity, accuracy and SLA targets",
+        "Escalating complex or policy-related cases",
+        "Preparing basic reports and maintaining process records",
+        "PRIME LEARNING |Business Development Associate |October 2021 – March 2022",
+        "Supported day-to-day business operations, customer communication, and coordination with internal stakeholders.",
+        "Maintained accurate customer and business information while handling documentation and process-related activities.",
+        "Managed follow-ups and ensured timely completion of assigned tasks according to business requirements.",
+        "Handled customer queries professionally and developed strong communication and problem-solving skills.",
+        "Worked in a target-oriented environment while maintaining accuracy, productivity, and professional standards.",
+        "C",
+        "C++"
+      ],
+      "internships": []
+    },
+    "certifications": [
+      "Participated in “Skill Up to Sell Up” Program",
+      "STRENGTHS",
+      "Strong attention to detail",
+      "Good written and verbal communication",
+      "Team player with a collaborative approach",
+      "Quick learner and adaptable to new processes",
+      "Problem-solving ability",
+      "Ability to work under pressure and meet deadlines",
+      "Self-motivated and responsible"
+    ],
+    "projects": [],
+    "languages": [],
+    "confidence": 89.0,
+    "source_file": "Pedditi Shruthi Reddy CV.pdf",
+    "resume_path": "C:\\Users\\Manas\\Downloads\\AI-DRIVEN-SMART-HIRING-PLATFORM-MCQ-NEXT-QUESTION-FIXED\\uploads\\Pedditi Shruthi Reddy CV.pdf",
+    "raw_text_preview": "Pedditi Shruthi Reddy \nHyderabad, Telangana | +91-6309088335 | Shruthireddyreddy233@gmail.com \nPROFESSIONAL SUMMARY \nProcess-oriented professional with experience in business operations and process execution, with strong skills in Microsoft Excel, \nMS Office, documentation, data handling, reporting, and customer support. Experienced in following defined processes, \nmaintaining accuracy, meeting deadlines, coordinating with teams, and resolving routine queries. Quick learner with a \nprofessional approach, strong attention to detail, and willingness to learn Learning Administration and HR support processes. \nEDUCATION \n• \nVeda Degree College, Osmania University, Hyderabad \n\nBachelor of Science – B.Sc. Computer Science, 86% \n• \nSri Vidya Junior College, Telangana \n2021 \nIntermediate – MPC, 78.5% \n• \nLittle Flower Grammar High School, Telangana \n2018 \nSSC-88% 2016 \nTECHNICAL SKILLS \n• \nBusiness Process Support \n• \nMicrosoft Excel \n• \nData Entry & Data Management \n• \nDocumentation & Record Maintenance \n• \nMS Word \n• \nMS Office \n• \nC \n• \nC++ \nEXPERIENCE \nPROCESS EXECUTIVE | WIPRO | April 2022– October 2022 \n• \nReviewing and processing Google Shopping/product-related information \n• \nChecking product listings, attributes, prices, categories, or policy compliance \n• \nIdentifying incorrect or missing information \n• \nUpdating records/tools accurately \n• \nMeeting productivity, accuracy and SLA targets \n• \nEscalating complex or policy-related cases \n• \nPreparing basic reports and maintaining process records \nPRIME LEARNING |Business Development Associate |October 2021 – March 2022 \n• \nSupported day-to-day business operations, customer communication, and coordination with internal stakeholders. \n• \nMaintained accurate customer and business information while handling documentation and process-related activities. \n• \nManaged follow-ups and ensured timely completion of assigned tasks according to business requirements. \n• \nHandled customer queries professionally and developed strong communication and problem-solving skills. \n• \nWorked in a target-oriented environment while maintaining accuracy, productivity, and professional standards. \n\nCERTIFICATIONS \nParticipated in “Skill Up to Sell Up” Program \n\nSTRENGTHS \n• \nStrong attention to detail \n• \nGood written and verbal communication \n• \nTeam player with a collaborative approach \n• \nQuick learner and adaptable to new processes \n• \nProblem-solving ability \n• \nAbility to work under pressure and meet deadlines \n• \nSelf-motivated and responsible \nPERSONAL DETAILS \nName \n: Pedditi Shruthi Reddy \nMarital status \n: Married \nHobbies and Interests : Mandala art, Sports and Listening to music \nLanguages Known : Telugu, English, Hindi \nNationality \n: Indian \nReligion \n: Hindu \nDECLARATION \nI hereby declare that the above information is true and correct to the best of my knowledge and belief \nPlace: Hyderabad \nDate : \n\n(pedditi shruthireddy)",
+    "created_at": "2026-10-02T08:01:03+00:00",
+    "updated_at": "2026-10-02T08:01:03+00:00"
+  },
+  {
+    "candidate_id": 6,
+    "name": "SINDHU REDDY",
+    "headline": "",
+    "email": "pedetisindhureddy@gmail.com",
+    "phone": "+91-8247340677",
+    "location": "Hyderabad",
+    "education": [
+      "B.Tech, Computer Science (AI & ML)",
+      "2021-2025",
+      "Visvesvaraya College of Engineering & Technology, Hyderabad",
+      "CGPA : 6.62"
+    ],
+    "skills": [
+      "Data Analysis",
+      "Excel",
+      "Python",
+      "SQL"
+    ],
+    "experience": {
+      "total_experience": "0.8 years",
+      "roles": [
+        "Executive – Business Operations"
+      ],
+      "details": [
+        "India Insure Risk Management Services Pvt. Ltd. | Hyderabad",
+        "Aug 2025 – Apr 2026",
+        "Executive – Business Operations",
+        "Prepared and maintained Business Done Report (BDR) to track premium collections and business performance.",
+        "Dealt with OS (Operational Support) tickets, ensuring timely resolution of process and system issues.",
+        "Onboarding & Offboarding of POSP (Point of Sales Persons) and Direct Agents.",
+        "Maintained daily operational reports and ensured data accuracy in all documents.",
+        "Grid handling commission tracking and payout verification.",
+        "Reconciliation: Reconciled insurance policy records and premium payments to ensure accuracy.",
+        "Matched company payouts with insurer statements to ensure accurate reconciliation.",
+        "SQL"
+      ],
+      "internships": []
+    },
+    "certifications": [],
+    "projects": [
+      "Forest Fire Prediction Model using Cellular Automata and Machine Learning.",
+      "Designed a hybrid Cellular Automata and Machine Learning model to predict forest fire spread using environmental",
+      "and geospatial data",
+      "Performed data preprocessing and feature selection to improve prediction of accuracy and risk classification.",
+      "Power BI-Driven Analysis of Indian Agricultural Sector.",
+      "Analyzed agricultural datasets covering crop yield, rainfall and production trends to identify key patterns.",
+      "Developed interactive Power BI dashboards to present insights and support data-driven decision-making.",
+      "Scaling Up Security and Efficiency in Transactions using Blockchain.",
+      "Designed a blockchain-based system to improve transaction security, transparency and fraud prevention.",
+      "Implemented hashing, block creation and decentralized verification to ensure data integrity"
+    ],
+    "languages": [],
+    "confidence": 89.0,
+    "source_file": "SINDHU REDDY RESUME1 (2) (3).pdf",
+    "resume_path": "C:\\Users\\Manas\\Downloads\\AI-DRIVEN-SMART-HIRING-PLATFORM-MCQ-NEXT-QUESTION-FIXED\\uploads\\SINDHU REDDY RESUME1 (2) (3).pdf",
+    "raw_text_preview": "SINDHU REDDY \npedetisindhureddy@gmail.com \n+91-8247340677 \nlinkedin.com \nSUMMARY \nResults-oriented Business Operations Executive with experience in data analysis, reconciliation, business reporting, and operational \nsupport in the insurance domain. Skilled in MS Excel, dashboard reporting, SQL, and Python with strong ability to manage data \naccuracy, commission tracking, and operational processes. Proven ability to coordinate with teams, resolve operational issues, and \nsupport data-driven business decisions. \nTECHNICAL SKILLS \n• MS Excel & Data analysis \n• Dashboard Reporting & Data handling \n• Reconciliation \n• Python \n• SQL \nEXPERIENCE \nIndia Insure Risk Management Services Pvt. Ltd. | Hyderabad \nAug 2025 – Apr 2026 \nExecutive – Business Operations \n• Prepared and maintained Business Done Report (BDR) to track premium collections and business performance. \n• Dealt with OS (Operational Support) tickets, ensuring timely resolution of process and system issues. \n• Onboarding & Offboarding of POSP (Point of Sales Persons) and Direct Agents. \n• Maintained daily operational reports and ensured data accuracy in all documents. \n• Grid handling commission tracking and payout verification. \n• Reconciliation: Reconciled insurance policy records and premium payments to ensure accuracy. \n- Matched company payouts with insurer statements to ensure accurate reconciliation. \nEDUCATION \nB.Tech, Computer Science (AI & ML) \n2021-2025 \nVisvesvaraya College of Engineering & Technology, Hyderabad \nCGPA : 6.62 \nPROJECTS \nForest Fire Prediction Model using Cellular Automata and Machine Learning. \n• \nDesigned a hybrid Cellular Automata and Machine Learning model to predict forest fire spread using environmental \nand geospatial data \n• \nPerformed data preprocessing and feature selection to improve prediction of accuracy and risk classification. \nPower BI-Driven Analysis of Indian Agricultural Sector. \n• \nAnalyzed agricultural datasets covering crop yield, rainfall and production trends to identify key patterns. \n• \nDeveloped interactive Power BI dashboards to present insights and support data-driven decision-making. \nScaling Up Security and Efficiency in Transactions using Blockchain. \n• \nDesigned a blockchain-based system to improve transaction security, transparency and fraud prevention. \n• \nImplemented hashing, block creation and decentralized verification to ensure data integrity",
+    "created_at": "2026-10-02T08:00:55+00:00",
+    "updated_at": "2026-10-02T08:00:55+00:00"
+  },
+  {
+    "candidate_id": 5,
+    "name": "VALIKAR HARSHA VARDHAN",
+    "headline": "",
+    "email": "harshavardhanvalikar@gmail.com",
+    "phone": "7981233170",
+    "location": "Hyderabad, Telangana",
+    "education": [
+      "B.Tech – Computer Science & Engineering (AI & ML)",
+      "Visvesvaraya College of Engineering and Technology (Dec 2021 – July 2025)",
+      "CGPA: 6.8"
+    ],
+    "skills": [
+      "JavaScript",
+      "GitHub",
+      "React",
+      "Django",
+      "Linux",
+      "Python",
+      "SQL",
+      "Git"
+    ],
+    "experience": {
+      "total_experience": null,
+      "roles": [],
+      "details": [],
+      "internships": []
+    },
+    "certifications": [],
+    "projects": [
+      "Hotel Management System | Full Stack Web Application",
+      "Developed a full-stack application using Django and MVT architecture.",
+      "Implemented secure authentication and role-based access control.",
+      "Optimized booking workflows using Django ORM and SQL.",
+      "Designed responsive UI using HTML5 and CSS3.",
+      "Built an admin dashboard for real-time room occupancy monitoring.",
+      "Wild Animal Activity Detection & Alert Generation System | Team Project",
+      "Contributed to a deep learning-based detection system using hybrid neural networks.",
+      "Assisted in designing an alert mechanism to reduce human-animal conflict.",
+      "Supported data analysis, model evaluation, and result interpretation.",
+      "Gained exposure to AI pipelines and collaborative development.",
+      "KEY STRENGTHS",
+      "Strong analytical and problem-solving skills",
+      "Solid understanding of frontend–backend integration",
+      "Quick learner with passion for Full Stack Development",
+      "Effective team player"
+    ],
+    "languages": [],
+    "confidence": 78.0,
+    "source_file": "Valikar_Harsha_Vardhan_Resume 03.pdf",
+    "resume_path": "C:\\Users\\Manas\\Downloads\\AI-DRIVEN-SMART-HIRING-PLATFORM-MCQ-NEXT-QUESTION-FIXED\\uploads\\Valikar_Harsha_Vardhan_Resume 03.pdf",
+    "raw_text_preview": "VALIKAR HARSHA VARDHAN \nHyderabad, Telangana | 7981233170 | harshavardhanvalikar@gmail.com \nLinkedIn: https://www.linkedin.com/in/harsha-vardhan-valikar-407bb2360 \n\nCAREER OBJECTIVE \nComputer Science (AI & ML) undergraduate with strong fundamentals in frontend, backend, and full-stack \nweb development. Seeking Frontend / Backend / Full Stack Developer roles to build scalable web \napplications while continuously enhancing technical expertise. \n\nTECHNICAL SKILLS \nProgramming: Python \nFrontend: HTML5, CSS3, JavaScript, React \nBackend: Django (MVT Architecture) \nDatabases: SQL \nTools: Git, GitHub, Linux \n\nEDUCATION \nB.Tech – Computer Science & Engineering (AI & ML) \nVisvesvaraya College of Engineering and Technology (Dec 2021 – July 2025) \nCGPA: 6.8 \n\nPROJECTS \nHotel Management System | Full Stack Web Application \nDeveloped a full-stack application using Django and MVT architecture. \nImplemented secure authentication and role-based access control. \nOptimized booking workflows using Django ORM and SQL. \nDesigned responsive UI using HTML5 and CSS3. \nBuilt an admin dashboard for real-time room occupancy monitoring. \nWild Animal Activity Detection & Alert Generation System | Team Project \nContributed to a deep learning-based detection system using hybrid neural networks. \nAssisted in designing an alert mechanism to reduce human-animal conflict. \nSupported data analysis, model evaluation, and result interpretation. \nGained exposure to AI pipelines and collaborative development. \n\nKEY STRENGTHS \nStrong analytical and problem-solving skills \nSolid understanding of frontend–backend integration \nQuick learner with passion for Full Stack Development \nEffective team player",
+    "created_at": "2026-10-02T08:00:46+00:00",
+    "updated_at": "2026-10-02T08:00:46+00:00"
+  },
+  {
+    "candidate_id": 4,
+    "name": "Salman Mohammed",
+    "headline": "",
+    "email": "salman18.mohammed@gmail.com",
+    "phone": "+91 9347839704",
+    "location": "Hyderabad, Telangana, India",
+    "education": [
+      "Bachelor of Technology in CSE (AIML) — Visvesvaraya College of Engineering and Technology, Hyderabad CGPA: 7.38 Dec 2021 – Jul 2025",
+      "Intermediate (M.P.C) — Sri NRI Jr College, Hyderabad — CGPA: 8.64 Jun 2019 – Jul 2021"
+    ],
+    "skills": [
+      "Machine Learning",
+      "JavaScript",
+      "GitHub",
+      "MySQL",
+      "Oracle",
+      "Django",
+      "Flask",
+      "AWS",
+      "Python",
+      "SQL",
+      "CSS"
+    ],
+    "experience": {
+      "total_experience": "5.8 years",
+      "roles": [
+        "Results-driven Software Engineer specializing in Full Stack and Machine Learning development with expertise in Python, Django, Flask, and SQL. Skilled in designing scalable applications, RESTful APIs, and data-driven systems with a focus on performance, accuracy, and collaboration."
+      ],
+      "details": [
+        "Results-driven Software Engineer specializing in Full Stack and Machine Learning development with expertise in Python, Django, Flask, and SQL. Skilled in designing scalable applications, RESTful APIs, and data-driven systems with a focus on performance, accuracy, and collaboration.",
+        "Bachelor of Technology in CSE (AIML) — Visvesvaraya College of Engineering and Technology, Hyderabad CGPA: 7.38 Dec 2021 – Jul 2025",
+        "Intermediate (M.P.C) — Sri NRI Jr College, Hyderabad — CGPA: 8.64 Jun 2019 – Jul 2021"
+      ],
+      "internships": [
+        "Software Developer Intern — Mangos Orange Services Pvt Ltd Sep 2024 – Feb 2025",
+        "Implemented a Facial & Manual Attendance System for MBBS students using Django REST Framework and OpenCV, enabling 92% facial recognition accuracy.",
+        "Optimized backend API performance by 30% through modular architecture and query tuning.",
+        "Full Stack Web Developer Intern — Edunet Foundation (with EY-GDS, AICTE) Feb 2024 – Apr 2024",
+        "Delivered a job application portal that streamlined HR workflows by 40% via secure authentication and role-based access.",
+        "Enhanced database efficiency by 25% using indexing and ORM-level optimizations.",
+        "CERTIFICATIONS & ACHIEVEMENTS",
+        "Accenture Software Engineering Virtual Experience – Forage (May 2025)",
+        "Deloitte Data Analytics & Visualization Internship – Forage (Jun 2025)",
+        "Winner – Hackathon (VCET UDBHAV) – 1st place among 50+ teams (Mar 2025)",
+        "AI & ML Foundation Certification – Infosys Springboard (Jul 2025)",
+        "Power BI Certification – PwC Switzerland (Sep 2024)",
+        "Generative AI Certifications – GUVI — HCL, Python (May 2025)",
+        "Location: Hyderabad, Telangana, India — Open to Relocate",
+        "Deployed a Flask-based churn predictor analyzing 7K+ customer records and attaining 90% precision.",
+        "Optimized the inference pipeline to improve dashboard response time by 25%."
+      ]
+    },
+    "certifications": [
+      "AI & ML Foundation Certification – Infosys Springboard (Jul 2025)",
+      "Power BI Certification – PwC Switzerland (Sep 2024)"
+    ],
+    "projects": [
+      "Federated and Explainable AI Framework for Financial Fraud Detection [GitHub]",
+      "Engineered a fraud detection web app using Flask and Scikit-learn, integrating DNN, SVM, and Gradient Boosting and attaining 95% accuracy.",
+      "Improved interpretability by adding Explainable AI and Federated Learning modules, enhancing data trans- parency and security by 40%.",
+      "Detecting Web Attacks with End-to-End Deep Learning [GitHub]",
+      "Implemented a secure Django-based intrusion detection system using AutoEncoder and LSTM, attaining 93% prediction accuracy.",
+      "Decreased false positives by 20% through OTP-secured authentication and an analytics dashboard.",
+      "Healthcare Risk & Medical Cost Prediction Web App [GitHub]",
+      "Designed a predictive analytics platform using Flask, XGBoost, and LightGBM, achieving R2 = 0.92.",
+      "Automated preprocessing and evaluation workflows, improving model reliability by 35%.",
+      "Telco Customer Churn Prediction Web App [GitHub]",
+      "Deployed a Flask-based churn predictor analyzing 7K+ customer records and attaining 90% precision.",
+      "Optimized the inference pipeline to improve dashboard response time by 25%."
+    ],
+    "languages": [],
+    "confidence": 100.0,
+    "source_file": "Salman_Resume.docx",
+    "resume_path": "C:\\Users\\Manas\\Downloads\\AI-DRIVEN-SMART-HIRING-PLATFORM-MCQ-NEXT-QUESTION-FIXED\\uploads\\Salman_Resume.docx",
+    "raw_text_preview": "Salman Mohammed\nPhone: +91 9347839704 — Email: salman18.mohammed@gmail.com — LinkedIn: mohammed-salman18\nPROFESSIONAL SUMMARY\nResults-driven Software Engineer specializing in Full Stack and Machine Learning development with expertise in Python, Django, Flask, and SQL. Skilled in designing scalable applications, RESTful APIs, and data-driven systems with a focus on performance, accuracy, and collaboration.\nEDUCATION\nBachelor of Technology in CSE (AIML) — Visvesvaraya College of Engineering and Technology, Hyderabad CGPA: 7.38 Dec 2021 – Jul 2025\nIntermediate (M.P.C) — Sri NRI Jr College, Hyderabad — CGPA: 8.64 Jun 2019 – Jul 2021\nTECHNICAL SKILLS\nLanguages & Frameworks: Python, Django, Flask, JavaScript, HTML5, CSS\nDatabases & Tools: MySQL, Oracle SQL, GitHub, AWS (Basic)\nConcepts & Technologies: Machine Learning, Object-Oriented Programming, Agile Methodologies\nLibraries: Pandas, NumPy, Matplotlib, Seaborn, Scikit-learn\nPROJECTS\nFederated and Explainable AI Framework for Financial Fraud Detection [GitHub]\nEngineered a fraud detection web app using Flask and Scikit-learn, integrating DNN, SVM, and Gradient Boosting and attaining 95% accuracy.\nImproved interpretability by adding Explainable AI and Federated Learning modules, enhancing data trans- parency and security by 40%.\nDetecting Web Attacks with End-to-End Deep Learning [GitHub]\nImplemented a secure Django-based intrusion detection system using AutoEncoder and LSTM, attaining 93% prediction accuracy.\nDecreased false positives by 20% through OTP-secured authentication and an analytics dashboard.\nHealthcare Risk & Medical Cost Prediction Web App [GitHub]\nDesigned a predictive analytics platform using Flask, XGBoost, and LightGBM, achieving R2 = 0.92.\nAutomated preprocessing and evaluation workflows, improving model reliability by 35%.\nTelco Customer Churn Prediction Web App [GitHub]\nDeployed a Flask-based churn predictor analyzing 7K+ customer records and attaining 90% precision.\nOptimized the inference pipeline to improve dashboard response time by 25%.\nINTERNSHIPS\nSoftware Developer Intern — Mangos Orange Services Pvt Ltd Sep 2024 – Feb 2025\nImplemented a Facial & Manual Attendance System for MBBS students using Django REST Framework and OpenCV, enabling 92% facial recognition accuracy.\nOptimized backend API performance by 30% through modular architecture and query tuning.\nFull Stack Web Developer Intern — Edunet Foundation (with EY-GDS, AICTE) Feb 2024 – Apr 2024\nDelivered a job application portal that streamlined HR workflows by 40% via secure authentication and role-based access.\nEnhanced database efficiency by 25% using indexing and ORM-level optimizations.\nCERTIFICATIONS & ACHIEVEMENTS\nAccenture Software Engineering Virtual Experience – Forage (May 2025)\nDeloitte Data Analytics & Visualization Internship – Forage (Jun 2025)\nWinner – Hackathon (VCET UDBHAV) – 1st place among 50+ teams (Mar 2025)\nAI & ML Foundation Certification – Infosys Springboard (Jul 2025)\nPower BI Certification – PwC Switzerland (Sep 2024)\nGenerative AI Certifications – GUVI — HCL, Python (May 2025)\nLocation: Hyderabad, Telangana, India — Open to Relocate",
+    "created_at": "2026-10-02T07:59:25+00:00",
+    "updated_at": "2026-10-02T07:59:29+00:00"
+  },
+  {
+    "candidate_id": 1,
+    "name": "VIJAY KUMAR",
+    "headline": "",
+    "email": "vijaykumar@gmail.com",
+    "phone": "+91 9988776655",
+    "location": "Delhi",
+    "education": [
+      "Bachelor of Technology – Computer Science and Engineering | Bharath Engineering College | 2020–2024"
+    ],
+    "skills": [
+      "JavaScript",
+      "REST API",
+      "GitHub",
+      "MySQL",
+      "Django",
+      "Flask",
+      "Python",
+      "SQL",
+      "Git",
+      "Communication"
+    ],
+    "experience": {
+      "total_experience": null,
+      "roles": [
+        "ENLIFE INOVATIONS – SOFTWARE DEVELOPER",
+        "Followed SDLC, Agile, and Scrum methodologies throughout the software development lifecycle"
+      ],
+      "details": [
+        "ENLIFE INOVATIONS – SOFTWARE DEVELOPER",
+        "Developed and maintained web applications using Python, JavaScript, Django, Flask, HTML5, and CSS3.",
+        "Designed and implemented application features based on functional requirements.",
+        "Developed REST APIs and integrated frontend and backend components using JSON and HTTP methods.",
+        "Worked with MySQL and SQL for database design, CRUD operations, queries, and data validation.",
+        "Debugged application issues, identified root causes, and implemented effective solutions.",
+        "Used Git and GitHub for version control and source-code management.",
+        "Performed functional and integration testing to ensure application quality and reliability.",
+        "Followed SDLC, Agile, and Scrum methodologies throughout the software development lifecycle"
+      ],
+      "internships": []
+    },
+    "certifications": [
+      "Full Stack Application Development",
+      "Software developer"
+    ],
+    "projects": [
+      "Hotel Royal Stay – Full Stack Booking System",
+      "Developed a Django-based web application using Python, SQL, and Object-Oriented Programming for user authentication, room search,",
+      "reservations, and administrative functionality.",
+      "Integrated MySQL to manage rooms, guests, reservations, payments, occupancy, and revenue data.",
+      "Worked with application workflows involving user inputs, authentication, database operations, and reservation processing.",
+      "Validated application data and database operations using SQL queries and debugging techniques.",
+      "Applied SDLC, Git, GitHub, and software development practices throughout application development.",
+      "Forest Fire Spread Prediction Model – AI/ML Simulation",
+      "Developed a Python-based AI/ML model combining cellular automata simulation and machine learning to model forest fire propagation.",
+      "Processed environmental and geospatial datasets and performed data preparation for model training and evaluation.",
+      "Evaluated model outputs and analyzed prediction patterns to identify potential inconsistencies and performance behavior.",
+      "Applied structured problem-solving and debugging approaches during model development."
+    ],
+    "languages": [],
+    "confidence": 100.0,
+    "source_file": "resume3.pdf",
+    "resume_path": "C:\\Users\\Manas\\Downloads\\AI-DRIVEN-SMART-HIRING-PLATFORM-MCQ-NEXT-QUESTION-FIXED\\uploads\\resume3.pdf",
+    "raw_text_preview": "VIJAY KUMAR \n+91 9988776655 | \nvijaykumar@gmail.com| Delhi \nPROFESSIONAL SUMMARY \nComputer Science (Artificial Intelligence and Machine Learning) graduate with a strong foundation in software development, SQL, Python, Object-\nOriented Programming, SDLC, Agile, Git, GitHub, MySQL, and API testing using Postman. Experienced in developing web applications, working with \ndatabases, validating structured data, troubleshooting application workflows, and applying analytical problem-solving skills. Familiar with software \ntesting concepts including STLC, functional testing, test case design, bug identification, debugging, and REST API testing. Eager to contribute to \nsoftware quality and test automation while learning new testing technologies. \nTECHNICAL SKILLS \nProgramming: Python, JavaScript \nSoftware Testing: STLC, SDLC, Functional Testing, Test Case Design, Bug Identification, Debugging, Software Quality Concepts \nAPI Testing: Postman, REST API Testing, HTTP Methods, Request and Response Validation, JSON \nDatabase: SQL, MySQL, RDBMS, CRUD Operations, Data Validation \nVersion Control: Git, GitHub \nWeb Development: Django, Flask, HTML5, CSS3 \nMethodologies: Agile, Scrum, SDLC \nfSoft Skills: Analytical and Problem-Solving Skills | Debugging and Troubleshooting | Database Concepts |Quick Learner | Written and Verbal \nCommunication | Team Collaboration | Willingness to Learn New Technologies \nEDUCATION \nBachelor of Technology – Computer Science and Engineering | Bharath Engineering College | 2020–2024 \nEXPERIENCE \nENLIFE INOVATIONS – SOFTWARE DEVELOPER \n• \nDeveloped and maintained web applications using Python, JavaScript, Django, Flask, HTML5, and CSS3. \n• \nDesigned and implemented application features based on functional requirements. \n• \nDeveloped REST APIs and integrated frontend and backend components using JSON and HTTP methods. \n• \nWorked with MySQL and SQL for database design, CRUD operations, queries, and data validation. \n• \nDebugged application issues, identified root causes, and implemented effective solutions. \n• \nUsed Git and GitHub for version control and source-code management. \n• \nPerformed functional and integration testing to ensure application quality and reliability. \n• \nFollowed SDLC, Agile, and Scrum methodologies throughout the software development lifecycle \n\nPROJECTS \nHotel Royal Stay – Full Stack Booking System \n• Developed a Django-based web application using Python, SQL, and Object-Oriented Programming for user authentication, room search, \nreservations, and administrative functionality. \n• Integrated MySQL to manage rooms, guests, reservations, payments, occupancy, and revenue data. \n• Worked with application workflows involving user inputs, authentication, database operations, and reservation processing. \n• Validated application data and database operations using SQL queries and debugging techniques. \n• Applied SDLC, Git, GitHub, and software development practices throughout application development. \nForest Fire Spread Prediction Model – AI/ML Simulation \n• Developed a Python-based AI/ML model combining cellular automata simulation and machine learning to model forest fire propagation. \n• Processed environmental and geospatial datasets and performed data preparation for model training and evaluation. \n• Evaluated model outputs and analyzed prediction patterns to identify potential inconsistencies and performance behavior. \n• Applied structured problem-solving and debugging approaches during model development. \nCERTIFICATIONS \n• Full Stack Application Development \n• Software developer",
+    "created_at": "2026-10-02T07:58:44+00:00",
+    "updated_at": "2026-10-02T07:58:44+00:00"
+  }
+]

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Candidate Dashboard · AI Recruitment Copilot{% endblock %}
+{% block content %}
+<header class="topbar"><div><div class="eyebrow">CANDIDATE VIEW</div><h1>{{ candidate.name }}</h1><p>Your AI-generated resume analysis, skills profile and job-fit insights.</p></div><div class="top-actions"><a class="export-btn" href="{{ url_for('analysis_report', index=index) }}">View Report</a><a class="new-job-btn" href="{{ url_for('download_analysis_report', index=index) }}">⇩ Download Report</a></div></header>
+<section class="stats-grid"><article class="stat-card"><div class="stat-label">Skills Detected</div><strong>{{ candidate.skills|length }}</strong><span class="trend">From resume</span></article><article class="stat-card"><div class="stat-label">Profile Completeness</div><strong>{{ candidate.confidence }}%</strong><span class="trend">Extraction completeness</span></article><article class="stat-card"><div class="stat-label">Projects</div><strong>{{ candidate.projects|length }}</strong><span class="trend">Projects detected</span></article><article class="stat-card"><div class="stat-label">Certifications</div><strong>{{ candidate.certifications|length }}</strong><span class="trend">Credentials detected</span></article></section>
+<section class="dashboard-grid"><article class="card dashboard-panel"><div class="panel-head"><div><div class="eyebrow">SKILL PROFILE</div><h2>Skill Distribution</h2></div></div><div class="chart-row"><div class="pie-chart" style="--p1:{{ skill_pct }}%;--p2:{{ 100-skill_pct }}%"><div>{{ candidate.skills|length }}<small>skills</small></div></div><div class="legend">{% for item in skill_categories %}<div><i class="dot dot-{{ loop.index0 % 5 }}"></i><span>{{ item.name }}</span><b>{{ item.count }}</b></div>{% else %}<p class="muted">No skills detected.</p>{% endfor %}</div></div></article>
+<article class="card dashboard-panel"><div class="panel-head"><div><div class="eyebrow">PROFILE ANALYSIS</div><h2>Resume Health</h2></div></div><div class="analysis-bars"><div><span>Contact details</span><b>{{ completeness.contact }}%</b><i><em style="width:{{ completeness.contact }}%"></em></i></div><div><span>Education</span><b>{{ completeness.education }}%</b><i><em style="width:{{ completeness.education }}%"></em></i></div><div><span>Skills</span><b>{{ completeness.skills }}%</b><i><em style="width:{{ completeness.skills }}%"></em></i></div><div><span>Experience</span><b>{{ completeness.experience }}%</b><i><em style="width:{{ completeness.experience }}%"></em></i></div><div><span>Projects & certifications</span><b>{{ completeness.projects }}%</b><i><em style="width:{{ completeness.projects }}%"></em></i></div></div></article></section>
+<section class="card skills-insights-panel">
+<div class="panel-head"><div><div class="eyebrow">CANDIDATE INSIGHTS</div><h2>Skills Analytics</h2><p>Visual breakdown of skills detected from this candidate's resume.</p></div><span class="insight-badge">{{ candidate.skills|length }} detected</span></div>
+<div class="skills-graphs">
+  <div class="skill-graph-card">
+    <div class="graph-title"><h3>Skills by Category</h3><span>Count</span></div>
+    <div class="skill-bars">
+      {% for item in skill_categories %}
+      <div class="skill-bar-row"><div class="skill-label"><span>{{ item.name }}</span><b>{{ item.count }}</b></div><div class="skill-track"><i style="width:{{ (item.count / max_skill_category * 100)|round(0) }}%"></i></div></div>
+      {% else %}<div class="empty-mini">No skills detected in the resume.</div>{% endfor %}
+    </div>
+  </div>
+  <div class="skill-graph-card skill-donut-card">
+    <div class="graph-title"><h3>Skill Mix</h3><span>Category share</span></div>
+    {% set total_categories = skill_categories|sum(attribute='count') %}
+    <div class="donut-wrap">
+      <div class="skill-donut" style="--skill-total:{{ total_categories }}; --c1:{{ ((skill_categories[0].count / total_categories * 100) if total_categories and skill_categories|length > 0 else 0)|round(1) }}%; --c2:{{ ((skill_categories[1].count / total_categories * 100) if total_categories and skill_categories|length > 1 else 0)|round(1) }}%; --c3:{{ ((skill_categories[2].count / total_categories * 100) if total_categories and skill_categories|length > 2 else 0)|round(1) }}%; --c4:{{ ((skill_categories[3].count / total_categories * 100) if total_categories and skill_categories|length > 3 else 0)|round(1) }}%; --c5:{{ ((skill_categories[4].count / total_categories * 100) if total_categories and skill_categories|length > 4 else 0)|round(1) }}%;">
+        <div><strong>{{ total_categories }}</strong><small>skills</small></div>
+      </div>
+      <div class="donut-legend">{% for item in skill_categories %}<div><i class="dot dot-{{ loop.index0 % 5 }}"></i><span>{{ item.name }}</span><b>{{ ((item.count / total_categories * 100) if total_categories else 0)|round(0) }}%</b></div>{% else %}<span class="muted">No category data</span>{% endfor %}</div>
+    </div>
+  </div>
+</div>
+<div class="detected-skills"><div class="graph-title"><h3>Detected Skills</h3><span>Resume extraction</span></div><div class="chips">{% for skill in candidate.skills %}<span>{{ skill }}</span>{% else %}<span>Not detected</span>{% endfor %}</div></div>
+</section>
+<section class="card recent-panel"><div class="panel-head"><div><div class="eyebrow">SKILL GAP ANALYSIS</div><h2>Compare with a Job</h2><p>Select a job to see matched and missing skills.</p></div><select id="jobSelect" class="job-select"><option value="">Select job posting</option>{% for job in jobs %}<option value="{{ job.id }}">{{ job.title }}</option>{% endfor %}</select></div><div id="gapResult" class="gap-result"><div class="empty"><div>◎</div><h3>Choose a job posting</h3><p>Your skill gap bar graph and matched/missing skills will appear here.</p></div></div></section>
+<section class="card recent-panel"><div class="panel-head"><div><div class="eyebrow">RESUME ANALYSIS REPORT</div><h2>Downloadable Report</h2></div><a class="new-job-btn" href="{{ url_for('download_analysis_report', index=index) }}">⇩ Download PDF</a></div><div class="report-summary"><div><b>Candidate summary</b><p>{{ summary }}</p></div><div><b>Recommended next steps</b><ul>{% for x in next_steps %}<li>{{ x }}</li>{% endfor %}</ul></div></div></section>
+{% endblock %}
+{% block page_scripts %}<script>window.CANDIDATE_INDEX={{ index }};</script><script src="{{ url_for('static', filename='candidate_dashboard.js') }}"></script>{% endblock %}

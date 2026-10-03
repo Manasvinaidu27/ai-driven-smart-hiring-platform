@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Resume Parsing & Candidate Profiling{% endblock %}
+{% block content %}
+<header class="topbar">
+  <div><div class="eyebrow">AI-DRIVEN SMART HIRING PLATFORM</div><h1>Resume Parsing & Candidate Profiling</h1><p>Upload a resume and extract verified structured candidate information.</p></div>
+  <div class="ready"><i></i> Parsing Engine Ready</div>
+</header>
+<section class="layout">
+  <div class="left">
+    <section class="card upload-card">
+      <div class="title"><div class="icon">⇧</div><div><h2>Upload Resume</h2><p>Drag and drop or browse your candidate file</p></div></div>
+      <div id="dropZone" class="drop-zone">
+        <div class="cloud">☁</div><h3>Drop your resume here</h3><p>or choose a file from your computer</p>
+        <label class="choose">Select Resume<input id="resumeInput" type="file" accept=".pdf,.docx" hidden></label>
+        <small>Supported formats: PDF, DOCX · Maximum 10 MB</small>
+      </div>
+      <div id="filePreview" class="file hidden"><div class="file-icon">PDF</div><div><b id="fileName"></b><small id="fileSize"></small></div><button id="removeFile">×</button></div>
+      <button id="parseButton" class="parse" disabled><span id="buttonText">✦ Parse Resume</span><span id="loader" class="loader hidden"></span></button>
+      <div id="message" class="message hidden"></div>
+    </section>
+    <section class="card progress-card"><div class="head"><h2>Parsing Progress</h2><span id="progressStatus">Waiting</span></div>
+      <div class="progress"><div id="step1"><b>✓</b><span>File Uploaded</span></div><em></em><div id="step2"><b>✓</b><span>Text Extracted</span></div><em></em><div id="step3"><b>✓</b><span>Information Parsed</span></div><em></em><div id="step4"><b>✓</b><span>Profile Generated</span></div></div>
+    </section>
+    <section class="card quick"><div class="head"><h2>Quick Stats</h2></div><div class="stats"><div><small>Fields Found</small><b id="statFields">0</b></div><div><small>Skills Detected</small><b id="statSkills">0</b></div><div><small>Experience</small><b id="statExperience">—</b></div><div><small>Confidence</small><b id="statConfidence">0%</b></div></div></section>
+  </div>
+  <section class="card profile">
+    <div class="profile-head"><div><div class="eyebrow">LIVE EXTRACTION</div><h2>Candidate Profile</h2><p>Structured information extracted from the uploaded resume</p></div><div id="profileActions" class="profile-actions"></div><button id="downloadButton" disabled>⇩ Download PDF</button></div>
+    <div id="emptyProfile" class="empty"><div>♙</div><h3>Candidate information will appear here</h3><p>Upload and parse a PDF or DOCX resume.</p></div>
+    <div id="profileContent" class="hidden">
+      <div class="identity"><div id="avatar" class="avatar">CN</div><div class="person"><h2 id="candidateName">Not detected</h2><small id="candidateLocation">Not detected</small></div><div class="contact"><span>✉ <b id="candidateEmail">Not detected</b></span><span>☎ <b id="candidatePhone">Not detected</b></span></div></div>
+      <div class="grid2"><div class="detail"><h3>🎓 Education</h3><div id="education"></div></div><div class="detail"><h3>▣ Experience</h3><div id="experience"></div></div></div>
+      <div class="detail full"><h3>‹/› Skills</h3><div id="skills" class="chips"></div></div>
+      <div class="grid2"><div class="detail"><h3>✚ Certifications</h3><div id="certifications"></div></div><div class="detail"><h3>▰ Projects</h3><div id="projects"></div></div></div>
+      <div class="detail full"><h3>◎ Languages</h3><div id="languages"></div></div>
+      <details class="raw"><summary>▤ Extracted Raw Text Preview</summary><pre id="rawText"></pre></details>
+    </div>
+  </section>
+</section>
+<section class="card recent"><div class="head"><div><div class="eyebrow">CANDIDATE PIPELINE</div><h2>Recently Processed Candidates</h2></div><a href="/candidates">View All →</a></div>
+{% for c in candidates[:5] %}<div class="candidate-row"><div class="mini">{{ (c.name or 'CN')[:2]|upper }}</div><div><b>{{ c.name }}</b><small>{{ c.email }}</small></div><div class="chips mini-chips">{% for s in c.skills[:5] %}<span>{{ s }}</span>{% endfor %}</div><strong>{{ c.confidence }}%</strong></div>{% else %}<p class="muted">No candidates processed yet.</p>{% endfor %}</section>
+{% endblock %}

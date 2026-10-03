@@ -1,0 +1,93 @@
+[
+  {
+    "candidate_id": "7",
+    "name": "Pedditi Shruthi Reddy",
+    "email": "Shruthireddyreddy233@gmail.com",
+    "job_applied": "Data Analyst",
+    "status": "Synced to ATS",
+    "phone": "+91-6309088335",
+    "location": "Hyderabad, Telangana",
+    "skills": [
+      "Excel",
+      "C++",
+      "C"
+    ],
+    "education": [
+      "Veda Degree College, Osmania University, Hyderabad",
+      "Bachelor of Science \u2013 B.Sc. Computer Science, 86%",
+      "Sri Vidya Junior College, Telangana",
+      "2021",
+      "Intermediate \u2013 MPC, 78.5%",
+      "Little Flower Grammar High School, Telangana",
+      "2018",
+      "SSC-88% 2016"
+    ],
+    "experience": {
+      "total_experience": "1.1 years",
+      "roles": [
+        "PROCESS EXECUTIVE | WIPRO | April 2022\u2013 October 2022",
+        "PRIME LEARNING |Business Development Associate |October 2021 \u2013 March 2022",
+        "Supported day-to-day business operations, customer communication, and coordination with internal stakeholders."
+      ],
+      "details": [
+        "PROCESS EXECUTIVE | WIPRO | April 2022\u2013 October 2022",
+        "Reviewing and processing Google Shopping/product-related information",
+        "Checking product listings, attributes, prices, categories, or policy compliance",
+        "Identifying incorrect or missing information",
+        "Updating records/tools accurately",
+        "Meeting productivity, accuracy and SLA targets",
+        "Escalating complex or policy-related cases",
+        "Preparing basic reports and maintaining process records",
+        "PRIME LEARNING |Business Development Associate |October 2021 \u2013 March 2022",
+        "Supported day-to-day business operations, customer communication, and coordination with internal stakeholders.",
+        "Maintained accurate customer and business information while handling documentation and process-related activities.",
+        "Managed follow-ups and ensured timely completion of assigned tasks according to business requirements.",
+        "Handled customer queries professionally and developed strong communication and problem-solving skills.",
+        "Worked in a target-oriented environment while maintaining accuracy, productivity, and professional standards.",
+        "C",
+        "C++"
+      ],
+      "internships": []
+    },
+    "synced_at": "2026-10-03T12:07:29"
+  },
+  {
+    "name": "Postman Candidate",
+    "email": "postman@example.com",
+    "job_applied": "Python API Developer",
+    "status": "Interview",
+    "created_at": "2026-10-03T12:08:40",
+    "updated_at": "2026-10-03T12:08:40"
+  },
+  {
+    "candidate_id": "3",
+    "name": "ADAPA MANASVI",
+    "email": "manasvinaidu27@gmail.com",
+    "job_applied": "Python API Developer",
+    "status": "Synced to ATS",
+    "phone": "+91 7731880118",
+    "location": "Hyderabad, Telangana, India",
+    "skills": [
+      "PostgreSQL",
+      "JavaScript",
+      "GitHub",
+      "MySQL",
+      "Django",
+      "Flask",
+      "Python",
+      "SQL",
+      "Git"
+    ],
+    "education": [
+      "Bachelor of Technology (Computer Science Engineering)",
+      "Jawaharlal Nehru Technological University Anantapur"
+    ],
+    "experience": {
+      "total_experience": null,
+      "roles": [],
+      "details": [],
+      "internships": []
+    },
+    "synced_at": "2026-10-03T12:10:11"
+  }
+]

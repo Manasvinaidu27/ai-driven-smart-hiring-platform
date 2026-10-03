@@ -1,0 +1,242 @@
+[
+  {
+    "id": 16,
+    "title": "python developer",
+    "required_skills": [
+      "python",
+      "SQL",
+      "REST APIs"
+    ],
+    "min_experience": 0.0,
+    "education": "",
+    "location": "",
+    "description": ""
+  },
+  {
+    "id": 1,
+    "title": "Python API Developer",
+    "required_skills": [
+      "Python",
+      "REST APIs",
+      "Django",
+      "SQL",
+      "Git"
+    ],
+    "min_experience": 0,
+    "education": "B.Tech / B.E. / equivalent",
+    "location": "Hyderabad, India",
+    "description": "Build and maintain Python REST APIs, backend services and database-backed features."
+  },
+  {
+    "id": 2,
+    "title": "Data Analyst",
+    "required_skills": [
+      "Python",
+      "SQL",
+      "Power BI",
+      "Excel",
+      "Pandas"
+    ],
+    "min_experience": 0,
+    "education": "B.Tech / B.Sc. / equivalent",
+    "location": "Hyderabad, India",
+    "description": "Analyze business data, build dashboards and communicate actionable insights."
+  },
+  {
+    "id": 3,
+    "title": "Full Stack Developer",
+    "required_skills": [
+      "Python",
+      "Django",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "SQL",
+      "Git"
+    ],
+    "min_experience": 0,
+    "education": "B.Tech / B.E. / equivalent",
+    "location": "Hyderabad, India",
+    "description": "Develop responsive web applications across frontend, backend and database layers."
+  },
+  {
+    "id": 4,
+    "title": "Backend Engineer",
+    "required_skills": [
+      "Python",
+      "APIs",
+      "SQL",
+      "Git",
+      "Django"
+    ],
+    "min_experience": 0,
+    "education": "B.Tech / B.E. / equivalent",
+    "location": "Hyderabad, India",
+    "description": "Design reliable backend services, APIs and data access layers."
+  },
+  {
+    "id": 5,
+    "title": "QA Automation Engineer",
+    "required_skills": [
+      "Testing",
+      "Automation",
+      "Python",
+      "Selenium",
+      "API Testing"
+    ],
+    "min_experience": 0,
+    "education": "B.Tech / B.E. / equivalent",
+    "location": "Hyderabad, India",
+    "description": "Create test plans, automate regression coverage and validate web and API quality."
+  },
+  {
+    "id": 6,
+    "title": "Machine Learning Engineer",
+    "required_skills": [
+      "Python",
+      "Machine Learning",
+      "Pandas",
+      "NumPy",
+      "Scikit-learn"
+    ],
+    "min_experience": 0,
+    "education": "B.Tech / M.Tech / equivalent",
+    "location": "Hyderabad, India",
+    "description": "Prepare data, train and evaluate machine-learning models and support deployment."
+  },
+  {
+    "id": 7,
+    "title": "AI Engineer",
+    "required_skills": [
+      "Python",
+      "Artificial Intelligence",
+      "Machine Learning",
+      "NLP",
+      "APIs"
+    ],
+    "min_experience": 0,
+    "education": "B.Tech / M.Tech / equivalent",
+    "location": "Hyderabad, India",
+    "description": "Develop AI features, evaluate models and integrate intelligent services into applications."
+  },
+  {
+    "id": 8,
+    "title": "Power BI Developer",
+    "required_skills": [
+      "Power BI",
+      "DAX",
+      "SQL",
+      "Data Modeling",
+      "Excel"
+    ],
+    "min_experience": 0,
+    "education": "B.Tech / B.Sc. / equivalent",
+    "location": "Hyderabad, India",
+    "description": "Build semantic models, DAX measures and business dashboards in Power BI."
+  },
+  {
+    "id": 9,
+    "title": "Cloud DevOps Engineer",
+    "required_skills": [
+      "AWS",
+      "Docker",
+      "CI/CD",
+      "Linux",
+      "Git"
+    ],
+    "min_experience": 0,
+    "education": "B.Tech / B.E. / equivalent",
+    "location": "Hyderabad, India",
+    "description": "Automate deployments, operate cloud infrastructure and improve application reliability."
+  },
+  {
+    "id": 10,
+    "title": "Business Analyst",
+    "required_skills": [
+      "SQL",
+      "Excel",
+      "Power BI",
+      "Requirements Analysis",
+      "Communication"
+    ],
+    "min_experience": 0,
+    "education": "B.Tech / BBA / equivalent",
+    "location": "Hyderabad, India",
+    "description": "Gather requirements, analyze business data and communicate measurable insights."
+  },
+  {
+    "id": 11,
+    "title": "Frontend Developer",
+    "required_skills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Responsive Design",
+      "Git"
+    ],
+    "min_experience": 0,
+    "education": "B.Tech / B.E. / equivalent",
+    "location": "Hyderabad, India",
+    "description": "Build responsive, accessible and maintainable browser-based user interfaces."
+  },
+  {
+    "id": 12,
+    "title": "Database SQL Developer",
+    "required_skills": [
+      "SQL",
+      "MySQL",
+      "PostgreSQL",
+      "Database Design",
+      "Indexing"
+    ],
+    "min_experience": 0,
+    "education": "B.Tech / B.E. / equivalent",
+    "location": "Hyderabad, India",
+    "description": "Design relational databases, write SQL and optimize data access."
+  },
+  {
+    "id": 13,
+    "title": "Cybersecurity Analyst",
+    "required_skills": [
+      "Cybersecurity",
+      "Networking",
+      "Linux",
+      "Risk Analysis",
+      "SIEM"
+    ],
+    "min_experience": 0,
+    "education": "B.Tech / B.E. / equivalent",
+    "location": "Hyderabad, India",
+    "description": "Analyze security alerts, assess risk and support incident response activities."
+  },
+  {
+    "id": 14,
+    "title": "Product Manager",
+    "required_skills": [
+      "Product Management",
+      "Requirements",
+      "Analytics",
+      "Communication",
+      "Prioritization"
+    ],
+    "min_experience": 0,
+    "education": "B.Tech / MBA / equivalent",
+    "location": "Hyderabad, India",
+    "description": "Define product requirements, prioritize work and measure product outcomes."
+  },
+  {
+    "id": 15,
+    "title": "Data Scientist",
+    "required_skills": [
+      "Python",
+      "Statistics",
+      "Machine Learning",
+      "SQL",
+      "Pandas"
+    ],
+    "min_experience": 0,
+    "education": "B.Tech / M.Tech / equivalent",
+    "location": "Hyderabad, India",
+    "description": "Explore data, build predictive models and communicate evidence-based findings."
+  }
+]

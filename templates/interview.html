@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block title %}Interview Assistance & ATS Integration{% endblock %}
+{% block content %}
+<div class="module-page">
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">INTERVIEW ASSISTANCE</div>
+      <h1>Interview Assistant</h1>
+      <p>Generate role-specific questions, simulate interviews, and manage candidates through ATS integration.</p>
+    </div>
+  </header>
+
+  <section class="milestone-grid">
+    <!-- LEFT: QUESTION GENERATOR -->
+    <section class="card question-generator-card">
+      <div class="section-title-row">
+        <div>
+          <div class="eyebrow dark-eyebrow">INTERVIEW QUESTION GENERATOR</div>
+          <h2>Role-specific interview questions</h2>
+        </div>
+        <span class="question-engine-dot"><i></i> Ready</span>
+      </div>
+      <div class="generator-controls">
+        <label>Job Position
+          <select id="interviewJob">
+            {% for j in jobs %}
+            <option value="{{ j.id }}" {% if loop.first %}selected{% endif %}>{{ j.title }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>Question Type
+          <select id="questionTypeSelect">
+            <option value="all">All 40 Questions</option>
+            <option value="descriptive">20 Descriptive Questions</option>
+            <option value="mcq">20 MCQs</option>
+          </select>
+        </label>
+      </div>
+      <div class="generator-list" id="generatorList">
+        <div class="question-placeholder">
+          <div class="placeholder-icon">?</div>
+          <b>Generate questions for the selected role</b>
+          <span>Questions are tailored to the job requirements.</span>
+        </div>
+      </div>
+      <div class="generator-footer">
+        <span id="questionCount">0 questions</span>
+        <button type="button" class="primary-purple-btn" id="startInterview">Generate Questions</button>
+      </div>
+      <div id="interviewSetupMsg" class="message hidden"></div>
+    </section>
+
+    <!-- RIGHT: AI SIMULATION -->
+    <section class="card simulation-card">
+      <div class="section-title-row">
+        <div>
+          <div class="eyebrow dark-eyebrow">AI INTERVIEW SIMULATION</div>
+          <h2 id="simulationTitle">Candidate Interview Simulation</h2>
+        </div>
+        <span id="questionProgress" class="question-progress">Question 1</span> <span class="active-session" id="sessionStatus">Ready</span>
+      </div>
+      <div class="candidate-line">
+        <label>Candidate:
+          <select id="interviewCandidate">
+            {% if candidates %}
+              {% for c in candidates %}
+              <option value="{{ loop.index0 }}">{{ c.name or 'Candidate ' ~ loop.index }}</option>
+              {% endfor %}
+            {% else %}
+              <option value="">Demo Candidate — Sarah Johnson</option>
+            {% endif %}
+          </select>
+        </label>
+      </div>
+      <div class="simulation-mode-picker">
+        <div class="simulation-mode-label">Choose Interview Type</div>
+        <div class="simulation-mode-options">
+          <button type="button" class="simulation-mode-btn active" data-sim-type="descriptive">
+            <strong>Descriptive Interview</strong>
+            <span>20 open-ended questions</span>
+          </button>
+          <button type="button" class="simulation-mode-btn" data-sim-type="mcq">
+            <strong>MCQ Interview</strong>
+            <span>20 multiple-choice questions</span>
+          </button>
+        </div>
+      </div>
+      <div class="chat-window" id="chatWindow">
+        <div class="chat-bubble ai-bubble">Select a job role and generate recruiter questions. The simulation will use the exact questions shown on the left.</div>
+      </div>
+      <div id="simulationMcqOptions" class="simulation-mcq-options hidden"></div>
+      <div class="chat-compose" id="simulationTextComposer">
+        <input id="answerInput" placeholder="Type your response..." autocomplete="off">
+        <button id="sendAnswer" class="send-btn">➤ <span>Send</span></button>
+      </div>
+      <div id="simulationFeedback" class="simulation-feedback hidden"></div>
+    </section>
+  </section>
+
+  <!-- ATS -->
+  <section class="card ats-mini-card">
+    <div class="ats-mini-head">
+      <div>
+        <div class="eyebrow dark-eyebrow">ATS INTEGRATION</div>
+        <h2>Candidate Management</h2>
+        <p>Select candidates and synchronize them with the connected ATS.</p>
+      </div>
+      <div class="ats-connected"><i></i> <span id="atsConnectionStatus">Checking…</span></div>
+    </div>
+    <div class="ats-mini-grid" id="atsMiniGrid">
+      {% if candidates %}
+        {% for c in candidates[:8] %}
+        <label class="ats-mini-candidate">
+          <input type="checkbox" class="mini-ats-check" value="{{ loop.index0 }}" data-email="{{ c.email or '' }}" data-candidate-id="{{ c.candidate_id or '' }}">
+          <span class="mini-avatar">{{ (c.name or 'CN').split()|map('first')|join('')|upper }}</span>
+          <span class="mini-candidate-info"><b>{{ c.name or 'Candidate ' ~ loop.index }}</b><small>{{ c.email or 'Email not detected' }}</small><em>Ready for ATS</em></span>
+        </label>
+        {% endfor %}
+      {% else %}
+        <div class="ats-empty">Upload resumes first to manage candidates in the ATS.</div>
+      {% endif %}
+    </div>
+    <div class="ats-mini-actions">
+      <span id="demoAtsCount">Demo ATS: checking candidates…</span>
+      <div class="ats-action-group">
+        <button class="secondary-btn" id="refreshMiniAts" type="button">Refresh</button>
+        <button class="secondary-btn" id="testMiniAts" type="button">Test Connection</button>
+        <button class="primary-orange-btn" id="syncMiniAts" type="button">Sync Selected Candidates</button>
+      </div>
+    </div>
+    <div id="miniAtsMsg" class="message hidden"></div>
+  </section>
+
+  <!-- FULL ATS CANDIDATE MANAGEMENT -->
+  <section class="card ats-management-card">
+    <div class="ats-management-head">
+      <div>
+        <div class="eyebrow dark-eyebrow">ATS API CANDIDATE MANAGEMENT</div>
+        <h2>Connected ATS Candidate Pipeline</h2>
+        <p>Push candidate profiles to the ATS, retrieve ATS records, prevent duplicate candidates, and update pipeline status.</p>
+      </div>
+      <span class="ats-provider-badge" id="atsProviderBadge">Demo ATS</span>
+    </div>
+
+    <div class="ats-api-config">
+      <select id="managementProvider">
+        <option>Demo ATS</option>
+        <option>External ATS</option>
+      </select>
+      <input id="managementBaseUrl" placeholder="ATS API base URL (optional for Demo ATS)">
+      <input id="managementApiKey" type="password" placeholder="ATS API key">
+      <button class="secondary-btn" id="saveManagementConfig" type="button">Save API</button>
+    </div>
+
+    <div class="ats-management-actions">
+      <span id="atsManagementSummary">Loading ATS candidates…</span>
+      <button class="secondary-btn" id="refreshAtsCandidates" type="button">Refresh ATS</button>
+      <button class="primary-orange-btn" id="syncAllAts" type="button">Sync Selected Above</button>
+    </div>
+
+    <div class="ats-management-table-wrap">
+      <table class="ats-management-table">
+        <thead><tr><th>Candidate</th><th>Email</th><th>Job Applied</th><th>ATS Status</th><th>Last Updated</th></tr></thead>
+        <tbody id="atsManagementBody"><tr><td colspan="5">Loading…</td></tr></tbody>
+      </table>
+    </div>
+    <div id="atsManagementMsg" class="message hidden"></div>
+  </section>
+
+
+</div>
+{% endblock %}
+{% block page_scripts %}
+<script>
+window.INTERVIEW_CANDIDATES={{ candidates|tojson }};
+window.INTERVIEW_JOBS={{ jobs|tojson }};
+</script>
+<script src="{{ url_for('static', filename='interview.js') }}?v=20260926-10"></script>
+<script src="{{ url_for('static', filename='ats.js') }}?v=20260924-6"></script>
+{% endblock %}

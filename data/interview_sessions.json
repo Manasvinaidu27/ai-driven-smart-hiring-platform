@@ -1,0 +1,261 @@
+[
+  {
+    "session_id": "session-1790924664514",
+    "candidate": {
+      "name": "Demo Candidate",
+      "email": "demo@example.com"
+    },
+    "job": {
+      "description": "Build and maintain Python REST APIs, backend services and database-backed features.",
+      "education": "B.Tech / B.E. / equivalent",
+      "id": 1,
+      "location": "Hyderabad, India",
+      "min_experience": 0,
+      "required_skills": [
+        "Python",
+        "REST APIs",
+        "Django",
+        "SQL",
+        "Git"
+      ],
+      "title": "Python API Developer"
+    },
+    "question_id": 1,
+    "question": "Which HTTP method is normally used to retrieve a resource?",
+    "answer": "GET",
+    "score": 100,
+    "feedback": [],
+    "metrics": {
+      "type": "mcq"
+    },
+    "saved_at": "2026-10-02T07:04:26.477254+00:00"
+  },
+  {
+    "session_id": "session-1790924664514",
+    "candidate": {
+      "name": "Demo Candidate",
+      "email": "demo@example.com"
+    },
+    "job": {
+      "description": "Build and maintain Python REST APIs, backend services and database-backed features.",
+      "education": "B.Tech / B.E. / equivalent",
+      "id": 1,
+      "location": "Hyderabad, India",
+      "min_experience": 0,
+      "required_skills": [
+        "Python",
+        "REST APIs",
+        "Django",
+        "SQL",
+        "Git"
+      ],
+      "title": "Python API Developer"
+    },
+    "question_id": 2,
+    "question": "Which status code normally indicates a successful resource creation?",
+    "answer": "200",
+    "score": 0,
+    "feedback": [],
+    "metrics": {
+      "type": "mcq"
+    },
+    "saved_at": "2026-10-02T07:04:28.144797+00:00"
+  },
+  {
+    "session_id": "session-1790928167808",
+    "candidate": {
+      "candidate_id": 7,
+      "certifications": [
+        "Participated in “Skill Up to Sell Up” Program",
+        "STRENGTHS",
+        "Strong attention to detail",
+        "Good written and verbal communication",
+        "Team player with a collaborative approach",
+        "Quick learner and adaptable to new processes",
+        "Problem-solving ability",
+        "Ability to work under pressure and meet deadlines",
+        "Self-motivated and responsible"
+      ],
+      "confidence": 89,
+      "created_at": "2026-10-02T08:01:03+00:00",
+      "education": [
+        "Veda Degree College, Osmania University, Hyderabad",
+        "Bachelor of Science – B.Sc. Computer Science, 86%",
+        "Sri Vidya Junior College, Telangana",
+        "2021",
+        "Intermediate – MPC, 78.5%",
+        "Little Flower Grammar High School, Telangana",
+        "2018",
+        "SSC-88% 2016"
+      ],
+      "email": "Shruthireddyreddy233@gmail.com",
+      "experience": {
+        "details": [
+          "PROCESS EXECUTIVE | WIPRO | April 2022– October 2022",
+          "Reviewing and processing Google Shopping/product-related information",
+          "Checking product listings, attributes, prices, categories, or policy compliance",
+          "Identifying incorrect or missing information",
+          "Updating records/tools accurately",
+          "Meeting productivity, accuracy and SLA targets",
+          "Escalating complex or policy-related cases",
+          "Preparing basic reports and maintaining process records",
+          "PRIME LEARNING |Business Development Associate |October 2021 – March 2022",
+          "Supported day-to-day business operations, customer communication, and coordination with internal stakeholders.",
+          "Maintained accurate customer and business information while handling documentation and process-related activities.",
+          "Managed follow-ups and ensured timely completion of assigned tasks according to business requirements.",
+          "Handled customer queries professionally and developed strong communication and problem-solving skills.",
+          "Worked in a target-oriented environment while maintaining accuracy, productivity, and professional standards.",
+          "C",
+          "C++"
+        ],
+        "internships": [],
+        "roles": [
+          "PROCESS EXECUTIVE | WIPRO | April 2022– October 2022",
+          "PRIME LEARNING |Business Development Associate |October 2021 – March 2022",
+          "Supported day-to-day business operations, customer communication, and coordination with internal stakeholders."
+        ],
+        "total_experience": "1.1 years"
+      },
+      "headline": "",
+      "languages": [],
+      "location": "Hyderabad, Telangana",
+      "name": "Pedditi Shruthi Reddy",
+      "phone": "+91-6309088335",
+      "projects": [],
+      "raw_text_preview": "Pedditi Shruthi Reddy \nHyderabad, Telangana | +91-6309088335 | Shruthireddyreddy233@gmail.com \nPROFESSIONAL SUMMARY \nProcess-oriented professional with experience in business operations and process execution, with strong skills in Microsoft Excel, \nMS Office, documentation, data handling, reporting, and customer support. Experienced in following defined processes, \nmaintaining accuracy, meeting deadlines, coordinating with teams, and resolving routine queries. Quick learner with a \nprofessional approach, strong attention to detail, and willingness to learn Learning Administration and HR support processes. \nEDUCATION \n• \nVeda Degree College, Osmania University, Hyderabad \n\nBachelor of Science – B.Sc. Computer Science, 86% \n• \nSri Vidya Junior College, Telangana \n2021 \nIntermediate – MPC, 78.5% \n• \nLittle Flower Grammar High School, Telangana \n2018 \nSSC-88% 2016 \nTECHNICAL SKILLS \n• \nBusiness Process Support \n• \nMicrosoft Excel \n• \nData Entry & Data Management \n• \nDocumentation & Record Maintenance \n• \nMS Word \n• \nMS Office \n• \nC \n• \nC++ \nEXPERIENCE \nPROCESS EXECUTIVE | WIPRO | April 2022– October 2022 \n• \nReviewing and processing Google Shopping/product-related information \n• \nChecking product listings, attributes, prices, categories, or policy compliance \n• \nIdentifying incorrect or missing information \n• \nUpdating records/tools accurately \n• \nMeeting productivity, accuracy and SLA targets \n• \nEscalating complex or policy-related cases \n• \nPreparing basic reports and maintaining process records \nPRIME LEARNING |Business Development Associate |October 2021 – March 2022 \n• \nSupported day-to-day business operations, customer communication, and coordination with internal stakeholders. \n• \nMaintained accurate customer and business information while handling documentation and process-related activities. \n• \nManaged follow-ups and ensured timely completion of assigned tasks according to business requirements. \n• \nHandled customer queries professionally and developed strong communication and problem-solving skills. \n• \nWorked in a target-oriented environment while maintaining accuracy, productivity, and professional standards. \n\nCERTIFICATIONS \nParticipated in “Skill Up to Sell Up” Program \n\nSTRENGTHS \n• \nStrong attention to detail \n• \nGood written and verbal communication \n• \nTeam player with a collaborative approach \n• \nQuick learner and adaptable to new processes \n• \nProblem-solving ability \n• \nAbility to work under pressure and meet deadlines \n• \nSelf-motivated and responsible \nPERSONAL DETAILS \nName \n: Pedditi Shruthi Reddy \nMarital status \n: Married \nHobbies and Interests : Mandala art, Sports and Listening to music \nLanguages Known : Telugu, English, Hindi \nNationality \n: Indian \nReligion \n: Hindu \nDECLARATION \nI hereby declare that the above information is true and correct to the best of my knowledge and belief \nPlace: Hyderabad \nDate : \n\n(pedditi shruthireddy)",
+      "resume_path": "C:\\Users\\Manas\\Downloads\\AI-DRIVEN-SMART-HIRING-PLATFORM-MCQ-NEXT-QUESTION-FIXED\\uploads\\Pedditi Shruthi Reddy CV.pdf",
+      "skills": [
+        "Excel",
+        "C++",
+        "C"
+      ],
+      "source_file": "Pedditi Shruthi Reddy CV.pdf",
+      "updated_at": "2026-10-02T08:01:03+00:00"
+    },
+    "job": {
+      "description": "",
+      "education": "",
+      "id": 16,
+      "location": "",
+      "min_experience": 0,
+      "required_skills": [
+        "python",
+        "SQL",
+        "REST APIs"
+      ],
+      "title": "python developer"
+    },
+    "question_id": 1,
+    "question": "Which HTTP method is normally used to retrieve a resource?",
+    "answer": "GET",
+    "score": 100,
+    "feedback": [],
+    "metrics": {
+      "type": "mcq"
+    },
+    "saved_at": "2026-10-02T08:02:50.679491+00:00"
+  },
+  {
+    "session_id": "session-1791003912292",
+    "candidate": {
+      "candidate_id": 5,
+      "certifications": [],
+      "confidence": 78,
+      "created_at": "2026-10-02T08:00:46+00:00",
+      "education": [
+        "B.Tech – Computer Science & Engineering (AI & ML)",
+        "Visvesvaraya College of Engineering and Technology (Dec 2021 – July 2025)",
+        "CGPA: 6.8"
+      ],
+      "email": "harshavardhanvalikar@gmail.com",
+      "experience": {
+        "details": [],
+        "internships": [],
+        "roles": [],
+        "total_experience": null
+      },
+      "headline": "",
+      "languages": [],
+      "location": "Hyderabad, Telangana",
+      "name": "VALIKAR HARSHA VARDHAN",
+      "phone": "7981233170",
+      "projects": [
+        "Hotel Management System | Full Stack Web Application",
+        "Developed a full-stack application using Django and MVT architecture.",
+        "Implemented secure authentication and role-based access control.",
+        "Optimized booking workflows using Django ORM and SQL.",
+        "Designed responsive UI using HTML5 and CSS3.",
+        "Built an admin dashboard for real-time room occupancy monitoring.",
+        "Wild Animal Activity Detection & Alert Generation System | Team Project",
+        "Contributed to a deep learning-based detection system using hybrid neural networks.",
+        "Assisted in designing an alert mechanism to reduce human-animal conflict.",
+        "Supported data analysis, model evaluation, and result interpretation.",
+        "Gained exposure to AI pipelines and collaborative development.",
+        "KEY STRENGTHS",
+        "Strong analytical and problem-solving skills",
+        "Solid understanding of frontend–backend integration",
+        "Quick learner with passion for Full Stack Development",
+        "Effective team player"
+      ],
+      "raw_text_preview": "VALIKAR HARSHA VARDHAN \nHyderabad, Telangana | 7981233170 | harshavardhanvalikar@gmail.com \nLinkedIn: https://www.linkedin.com/in/harsha-vardhan-valikar-407bb2360 \n\nCAREER OBJECTIVE \nComputer Science (AI & ML) undergraduate with strong fundamentals in frontend, backend, and full-stack \nweb development. Seeking Frontend / Backend / Full Stack Developer roles to build scalable web \napplications while continuously enhancing technical expertise. \n\nTECHNICAL SKILLS \nProgramming: Python \nFrontend: HTML5, CSS3, JavaScript, React \nBackend: Django (MVT Architecture) \nDatabases: SQL \nTools: Git, GitHub, Linux \n\nEDUCATION \nB.Tech – Computer Science & Engineering (AI & ML) \nVisvesvaraya College of Engineering and Technology (Dec 2021 – July 2025) \nCGPA: 6.8 \n\nPROJECTS \nHotel Management System | Full Stack Web Application \nDeveloped a full-stack application using Django and MVT architecture. \nImplemented secure authentication and role-based access control. \nOptimized booking workflows using Django ORM and SQL. \nDesigned responsive UI using HTML5 and CSS3. \nBuilt an admin dashboard for real-time room occupancy monitoring. \nWild Animal Activity Detection & Alert Generation System | Team Project \nContributed to a deep learning-based detection system using hybrid neural networks. \nAssisted in designing an alert mechanism to reduce human-animal conflict. \nSupported data analysis, model evaluation, and result interpretation. \nGained exposure to AI pipelines and collaborative development. \n\nKEY STRENGTHS \nStrong analytical and problem-solving skills \nSolid understanding of frontend–backend integration \nQuick learner with passion for Full Stack Development \nEffective team player",
+      "resume_path": "C:\\Users\\Manas\\Downloads\\AI-DRIVEN-SMART-HIRING-PLATFORM-MCQ-NEXT-QUESTION-FIXED\\uploads\\Valikar_Harsha_Vardhan_Resume 03.pdf",
+      "skills": [
+        "JavaScript",
+        "GitHub",
+        "React",
+        "Django",
+        "Linux",
+        "Python",
+        "SQL",
+        "Git"
+      ],
+      "source_file": "Valikar_Harsha_Vardhan_Resume 03.pdf",
+      "updated_at": "2026-10-02T08:00:46+00:00"
+    },
+    "job": {
+      "description": "",
+      "education": "",
+      "id": 16,
+      "location": "",
+      "min_experience": 0,
+      "required_skills": [
+        "python",
+        "SQL",
+        "REST APIs"
+      ],
+      "title": "python developer"
+    },
+    "question_id": 1,
+    "question": "Which HTTP method is normally used to retrieve a resource?",
+    "answer": "GET",
+    "score": 100,
+    "feedback": [],
+    "metrics": {
+      "type": "mcq"
+    },
+    "saved_at": "2026-10-03T05:05:17.945150+00:00"
+  },
+  {
+    "session_id": "postman-test-session",
+    "candidate": {
+      "name": "Postman Test Candidate"
+    },
+    "job": {
+      "id": 1,
+      "title": "Python API Developer"
+    },
+    "question_id": 1,
+    "question": "How would you design a versioned REST API in Python?",
+    "answer": "I would use versioned URLs such as /v1 and /v2, validate inputs, handle errors consistently, add logging, and write automated tests.",
+    "score": 85,
+    "feedback": [
+      "Good structured answer."
+    ],
+    "metrics": {
+      "technical_relevance": 90,
+      "communication": 80,
+      "structure": 85
+    },
+    "saved_at": "2026-10-03T06:31:40.929263+00:00"
+  }
+]

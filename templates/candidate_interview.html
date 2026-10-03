@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Candidate Practice Exam · AI Smart Hiring{% endblock %}
+{% block content %}
+<div class="module-page interview-theme">
+<header class="topbar candidate-topbar">
+  <div>
+    <div class="eyebrow">CANDIDATE PRACTICE EXAM</div>
+    <h1>AI Interview Practice</h1>
+    <p>Practice role-specific questions, submit your answers, and receive a score with feedback.</p>
+  </div>
+  <div class="top-actions">
+    <a class="export-btn" href="{{ url_for('candidate_dashboard') }}">← Dashboard</a>
+    <a class="new-job-btn" href="{{ url_for('logout') }}">Sign out</a>
+  </div>
+</header>
+
+<section class="interview-grid">
+  <aside class="card interview-setup">
+    <div class="module-icon">✦</div>
+    <h2>Practice Setup</h2>
+    <p class="muted">Choose a job role and take the complete 40-question interview: 20 descriptive + 20 MCQs.</p>
+    <label>Job Role
+      <select id="candidateJob">
+        <option value="">Select job role</option>
+        {% for j in jobs %}
+        <option value="{{ j.id }}" {% if loop.first %}selected{% endif %}>{{ j.title }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <div class="interview-info"><span>Exam</span><b>40 questions · 20 descriptive + 20 MCQs</b></div>
+    <div class="interview-info"><span>Question source</span><b>Exactly the same 40 questions as Recruiter Portal</b></div>
+    <button class="interview-start" id="startPractice">Start Practice Exam →</button>
+    <div id="practiceSetupMsg" class="message hidden"></div>
+  </aside>
+
+  <section class="card interview-room">
+    <div class="room-head">
+      <div>
+        <div class="eyebrow">PRACTICE EXAM ROOM</div>
+        <h2 id="practiceTitle">Ready when you are</h2>
+        <p id="practiceSub">Select a role and start your practice exam.</p>
+      </div>
+      <div class="question-count" id="practiceCount">0 / 10</div>
+    </div>
+
+    <div id="practiceEmpty" class="interview-empty">
+      <div class="module-icon">?</div>
+      <h3>Your practice question will appear here</h3>
+      <p>Answer all 40 questions. Your final score is shown after you submit the complete exam.</p>
+    </div>
+
+    <div id="practiceArea" class="hidden">
+      <div class="question-card">
+        <span id="practiceType">DESCRIPTIVE</span>
+        <h3 id="practiceQuestion"></h3>
+      </div>
+      <div id="practiceMcqOptions" class="practice-mcq-options hidden"></div>
+      <textarea id="practiceAnswer" rows="8" placeholder="Write your answer here… Use your own words and give examples where possible."></textarea>
+      <div class="answer-actions">
+        <span id="practiceWordCount">0 words</span>
+        <button class="interview-start" id="practiceNext">Next Question →</button>
+      </div>
+    </div>
+
+    <div id="practiceResult" class="hidden"></div>
+  </section>
+</section>
+
+<section class="card interview-info-panel">
+  <div class="panel-head">
+    <div>
+      <div class="eyebrow">QUESTION STRUCTURE</div>
+      <h2>40 questions for every selected role</h2>
+      <p>Questions 1–20 are descriptive and Questions 21–40 are MCQs. The Candidate Portal uses the exact same questions and MCQ options as the Recruiter Portal.</p>
+    </div>
+  </div>
+</section>
+</div>
+{% endblock %}
+{% block page_scripts %}<script src="{{ url_for('static', filename='candidate_interview.js') }}?v=20261001-40"></script>{% endblock %}

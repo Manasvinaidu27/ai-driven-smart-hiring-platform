@@ -1,0 +1,1 @@
+AI INTERVIEW SIMULATION: 20 role-specific questions per job. Recruiter generator retains 40 questions. Simulation answers are evaluated and saved after each response; overall score is calculated after all 20 answers.

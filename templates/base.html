@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}AI Smart Hiring Platform{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="{{ 'public-page' if request.endpoint in ['login','recruiter_login','candidate_login'] else 'app-page' }}">
+{% if request.endpoint not in ['login','recruiter_login','candidate_login'] %}
+<aside class="sidebar"><div class="brand"><div class="logo">RC</div><div><b>Recruitment</b><span>Copilot</span></div></div>{% if session.get('role') == 'candidate' %}<div class="role-badge candidate-badge">CANDIDATE PORTAL</div><nav><a class="{{ 'active' if request.path == '/candidate-dashboard' else '' }}" href="{{ url_for('candidate_dashboard') }}">▦ <span>My Dashboard</span></a><a class="{{ 'active' if request.path.startswith('/candidate-interview') else '' }}" href="/candidate-interview">◉ <span>Interview Assistance</span></a><a class="{{ 'active' if request.path.startswith('/jobs') else '' }}" href="/jobs">▣ <span>Job Postings</span></a></nav>{% else %}<div class="role-badge recruiter-badge">RECRUITER PORTAL</div><nav><a class="{{ 'active' if request.path == '/dashboard' else '' }}" href="/dashboard">▦ <span>Dashboard</span></a><a class="{{ 'active' if request.path == '/upload' else '' }}" href="/upload">▦ <span>Resume Upload</span></a><a class="{{ 'active' if request.path == '/candidates' else '' }}" href="/candidates">♙ <span>Candidates</span></a><a class="{{ 'active' if request.path.startswith('/candidate-database') else '' }}" href="/candidate-database">▤ <span>Candidate Database</span></a><a class="{{ 'active' if request.path.startswith('/jobs') else '' }}" href="/jobs">▣ <span>Job Postings</span></a><a class="{{ 'active' if request.path.startswith('/candidate-insights') or request.path.startswith('/candidate-dashboard') else '' }}" href="{{ url_for('candidate_insights') }}">◩ <span>Candidate Insights</span></a><a class="{{ 'active' if request.path.startswith('/interview') else '' }}" href="/interview">◉ <span>Interview Assistant</span></a><a class="{{ 'active' if request.path.startswith('/voice-screening') else '' }}" href="/voice-screening">◉ <span>Voice Screening</span></a></nav>{% endif %}<a class="logout-link {{ 'candidate-logout' if session.get('role') == 'candidate' else 'recruiter-logout' }}" href="{{ url_for('logout') }}">↪ <span>Sign out</span></a><div class="engine"><i></i><div><b>AI Engine Online</b><small>Resume · Matching · Interview</small></div></div></aside>
+{% endif %}
+<main class="main">{% block content %}{% endblock %}</main>
+<script src="{{ url_for('static', filename='upload.js') }}"></script>
+{% block page_scripts %}{% endblock %}
+</body>
+</html>

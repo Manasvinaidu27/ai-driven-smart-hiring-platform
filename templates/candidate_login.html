@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Candidate Login · AI Smart Hiring{% endblock %}
+{% block content %}
+<div class="auth-shell candidate-auth">
+  <form class="auth-card" method="post">
+    <div class="auth-icon">♙</div>
+    <div class="eyebrow">CANDIDATE PORTAL</div>
+    <h1>Candidate Sign In</h1>
+    <p class="muted">Sign in with your registered resume profile or use the demo account for presentation.</p>
+    {% if error %}<div class="error-box">{{ error }}</div>{% endif %}
+
+    <button class="demo-login-btn" type="submit" name="demo_login" value="1">✨ Demo Sign In</button>
+    <div class="demo-credentials"><b>Demo account</b><br>Email: demo.candidate@smart-hiring.local<br>Password: demo123 <span>(one-click demo)</span></div>
+
+    <div class="or-divider"><span>OR USE CANDIDATE PROFILE</span></div>
+    <label>Registered Email
+      <input name="email" type="email" placeholder="you@example.com">
+    </label>
+    <select name="candidate_index" class="job-select">
+      <option value="">Select your candidate profile</option>
+      {% for c in candidates %}<option value="{{ loop.index0 }}">{{ c.name or ('Candidate ' ~ loop.index) }} — {{ c.email or 'email not detected' }}</option>{% endfor %}
+    </select>
+    <button class="candidate-submit" type="submit">Sign in as Candidate →</button>
+    <a class="back-link" href="{{ url_for('login') }}">← Choose another portal</a>
+  </form>
+</div>
+{% endblock %}
