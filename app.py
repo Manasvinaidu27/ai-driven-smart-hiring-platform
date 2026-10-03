@@ -246,9 +246,21 @@ def upload_page():
 JOBS_FILE = DATA_DIR / "jobs.json"
 
 DEFAULT_JOBS = [
-    {"id": 1, "title": "Python Developer", "required_skills": ["Python", "Django", "SQL", "HTML", "CSS", "Git"], "min_experience": 0, "education": "B.Tech / B.E. / equivalent", "location": "Hyderabad, India", "description": "Build and maintain Python web applications, REST APIs and database-backed features."},
-    {"id": 2, "title": "Data Analyst", "required_skills": ["Python", "SQL", "Power BI", "Excel", "Pandas"], "min_experience": 0, "education": "B.Tech / B.Sc. / equivalent", "location": "Hyderabad, India", "description": "Analyze business data, build dashboards and communicate actionable insights."},
-    {"id": 3, "title": "Full Stack Developer", "required_skills": ["Python", "Django", "JavaScript", "HTML", "CSS", "SQL", "Git"], "min_experience": 0, "education": "B.Tech / B.E. / equivalent", "location": "Hyderabad, India", "description": "Develop responsive web applications across frontend, backend and database layers."}
+    {"id": "python-api-developer", "title": "Python API Developer"},
+    {"id": "data-analyst", "title": "Data Analyst"},
+    {"id": "full-stack-developer", "title": "Full Stack Developer"},
+    {"id": "backend-engineer", "title": "Backend Engineer"},
+    {"id": "qa-automation-engineer", "title": "QA Automation Engineer"},
+    {"id": "machine-learning-engineer", "title": "Machine Learning Engineer"},
+    {"id": "ai-engineer", "title": "AI Engineer"},
+    {"id": "power-bi-developer", "title": "Power BI Developer"},
+    {"id": "cloud-devops-engineer", "title": "Cloud DevOps Engineer"},
+    {"id": "business-analyst", "title": "Business Analyst"},
+    {"id": "frontend-developer", "title": "Frontend Developer"},
+    {"id": "database-sql-developer", "title": "Database SQL Developer"},
+    {"id": "cybersecurity-analyst", "title": "Cybersecurity Analyst"},
+    {"id": "product-manager", "title": "Product Manager"},
+    {"id": "data-scientist", "title": "Data Scientist"}
 ]
 
 def load_jobs():
