@@ -26,10 +26,15 @@ app = Flask(__name__)
 app.secret_key = 'ai-smart-hiring-demo-secret-key-change-in-production'
 app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024
 BASE_DIR = Path(__file__).resolve().parent
-UPLOAD_DIR = BASE_DIR / "uploads"
-DATA_DIR = BASE_DIR / "data"
-UPLOAD_DIR.mkdir(exist_ok=True)
-DATA_DIR.mkdir(exist_ok=True)
+
+# Vercel allows temporary runtime storage in /tmp.
+RUNTIME_DIR = Path("/tmp/ai-smart-hiring")
+
+UPLOAD_DIR = RUNTIME_DIR / "uploads"
+DATA_DIR = RUNTIME_DIR / "data"
+
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+DATA_DIR.mkdir(parents=True, exist_ok=True)
 ALLOWED = {".pdf", ".docx"}
 AI_API_URL = os.getenv("AI_API_URL", "").strip()
 AI_API_KEY = os.getenv("AI_API_KEY", "").strip()
