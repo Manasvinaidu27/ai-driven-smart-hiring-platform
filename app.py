@@ -1303,9 +1303,9 @@ def interview_page():
     return render_template("interview.html", jobs=jobs, candidates=candidates)
 
 
-@app.get("/api/interview/questions/<int:job_id>")
+@app.get("/api/interview/questions/<job_id>")
 def interview_questions(job_id):
-    job = next((j for j in load_jobs() if int(j.get("id", -1)) == job_id), None)
+    job = next((j for j in load_jobs() if str(j.get("id", "")) == str(job_id)), None)
     if not job:
         return jsonify(success=False, error="Job not found."), 404
     questions = shared_40_questions_for_job(job)
