@@ -1321,9 +1321,9 @@ def interview_questions(job_id):
                    question_count=len(questions), total_questions=40,
                    split={"descriptive":20,"mcq":20})
 
-@app.get("/api/voice-screening/questions/<int:job_id>")
+@app.get("/api/voice-screening/questions/<job_id>")
 def voice_screening_questions(job_id):
-    job = next((j for j in load_jobs() if int(j.get("id", -1)) == job_id), None)
+  job = next((j for j in load_jobs() if str(j.get("id", "")) == str(job_id)), None)
     if not job:
         return jsonify(success=False, error="Job not found."), 404
     # Voice screening uses the descriptive half of the canonical bank.
