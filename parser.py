@@ -10,11 +10,20 @@ import sqlite3
 from datetime import datetime, timezone
 
 BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR / "data"
-JSON_FILE = DATA_DIR / "candidates.json"
-CSV_FILE = DATA_DIR / "candidates.csv"
-DB_FILE = DATA_DIR / "candidates.db"
-DATA_DIR.mkdir(exist_ok=True)
+
+# Repository data is read-only on Vercel.
+SOURCE_DATA_DIR = BASE_DIR / "data"
+
+# Vercel provides /tmp for temporary runtime files.
+RUNTIME_DATA_DIR = Path("/tmp/ai-smart-hiring")
+RUNTIME_DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+JSON_FILE = RUNTIME_DATA_DIR / "candidates.json"
+CSV_FILE = RUNTIME_DATA_DIR / "candidates.csv"
+DB_FILE = RUNTIME_DATA_DIR / "candidates.db"
+
+# Demo/seed candidate data stored in the repository.
+SEED_JSON_FILE = SOURCE_DATA_DIR / "candidates.json"
 
 try:
     nlp = spacy.load("en_core_web_sm")
@@ -899,17 +908,25 @@ def _row_to_profile(row):
 
 
 def _migrate_json_to_db():
-    """One-time migration so existing demo candidates are not lost."""
+    """Load repository demo candidates into the temporary Vercel database."""
     with _db_connect() as conn:
-        count = conn.execute("SELECT COUNT(*) FROM candidates").fetchone()[0]
+        count = conn.execute(
+            "SELECT COUNT(*) FROM candidates"
+        ).fetchone()[0]
+
     if count:
         return
+
     try:
-        existing = json.loads(JSON_FILE.read_text(encoding="utf-8"))
+        existing = json.loads(
+            SEED_JSON_FILE.read_text(encoding="utf-8")
+        )
     except (FileNotFoundError, json.JSONDecodeError):
         existing = []
+
     if not isinstance(existing, list):
         return
+
     for profile in reversed(existing):
         save_profile(profile, sync_legacy=False)
 
