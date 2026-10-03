@@ -7,3 +7,4 @@ python-docx
 spacy
 scikit-learn
 requests
+reportlab
