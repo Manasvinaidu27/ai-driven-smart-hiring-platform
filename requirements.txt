@@ -1,4 +1,5 @@
 Flask
+gunicorn
 Werkzeug
 pandas
 numpy

@@ -11,4 +11,4 @@ RUN mkdir -p data/voice uploads
 
 EXPOSE 5000
 
-CMD ["python", "app.py"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:$PORT app:app"]
