@@ -1457,6 +1457,7 @@ def candidate_interview_questions(job_id):
             success=False,
             error=f"Candidate interview question generation failed: {type(exc).__name__}: {exc}"
         ), 500
+        
 
 @app.get("/api/voice-screening/questions/<job_id>")
 def voice_screening_questions(job_id):
