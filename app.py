@@ -1407,7 +1407,54 @@ def interview_page():
     candidates = load_candidates()
     return render_template("interview.html", jobs=jobs, candidates=candidates)
 
+    
+@app.get("/api/interview/questions/<job_id>")
+def interview_questions(job_id):
+    job = next(
+        (
+            j for j in load_jobs()
+            if str(j.get("id", "")).strip() == str(job_id).strip()
+        ),
+        None
+    )
 
+    if not job:
+        return jsonify(
+            success=False,
+            error="Job not found."
+        ), 404
+
+    questions = shared_40_questions_for_job(job)
+
+    qtype = str(
+        request.args.get("type") or "all"
+    ).strip().lower()
+
+    if qtype == "descriptive":
+        questions = questions[:20]
+
+    elif qtype == "mcq":
+        questions = questions[20:]
+
+    elif qtype != "all":
+        questions = [
+            q for q in questions
+            if q.get("type") == qtype
+        ][:40]
+
+    return jsonify(
+        success=True,
+        audience="recruiter",
+        job=job,
+        questions=questions,
+        question_count=len(questions),
+        total_questions=40,
+        split={
+            "descriptive": 20,
+            "mcq": 20
+        }
+    )
+    
 @app.get("/api/candidate-interview/questions/<job_id>")
 def candidate_interview_questions(job_id):
     try:
@@ -1733,7 +1780,6 @@ def evaluate_interview():
                             "communication": int(item.get("communication", 0)),
                             "structure": int(item.get("structure", 0))},
                    evaluation_mode=mode)
-
 
 # Milestone 3 mock ATS API endpoints. These mirror the FastAPI example in the project brief
 # while keeping the main application on Flask. A standalone FastAPI mock is also provided
