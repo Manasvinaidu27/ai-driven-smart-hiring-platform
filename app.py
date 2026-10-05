@@ -427,25 +427,112 @@ def api_candidate_insights():
 
 @app.get("/candidate-dashboard")
 def candidate_dashboard():
-    candidates = load_candidates()
-    if session.get("demo_candidate"):
-        candidate = DEMO_CANDIDATE
-        index = -1
-    else:
-        index = session.get("candidate_index")
-        if index is None or not isinstance(index, int) or not 0 <= index < len(candidates):
-            return redirect(url_for("candidate_login"))
-        candidate = candidates[index]
-    candidate_skills = {norm(x) for x in (candidate.get("skills", []) or [])}
-    jobs = load_jobs()
-    job_cards=[]
-    for job in jobs:
-        required={norm(x) for x in (skills_from_job(job) or [])}
-        matched=len(candidate_skills & required)
-        fit=round(matched/max(len(required),1)*100) if required else 0
-        job_cards.append({"job":job,"fit":fit,"matched":matched,"total":len(required)})
-    job_cards.sort(key=lambda x:(-x["fit"], str(x["job"].get("title","")).casefold()))
-    return render_template("candidate_portal.html", candidate=candidate, index=index, job_cards=job_cards[:8])
+    try:
+        candidates = load_candidates()
+
+        # Demo candidate login
+        if session.get("demo_candidate"):
+            candidate = DEMO_CANDIDATE.copy()
+            index = -1
+
+        else:
+            index = session.get("candidate_index")
+
+            if (
+                index is None
+                or not isinstance(index, int)
+                or not 0 <= index < len(candidates)
+            ):
+                return redirect(url_for("candidate_login"))
+
+            candidate = candidates[index]
+
+        # Make sure candidate data is always safe
+        if not isinstance(candidate, dict):
+            candidate = DEMO_CANDIDATE.copy()
+
+        skills = candidate.get("skills", [])
+        if not isinstance(skills, list):
+            skills = [str(skills)] if skills else []
+
+        candidate["skills"] = skills
+
+        candidate_skills = {
+            norm(skill)
+            for skill in skills
+            if str(skill).strip()
+        }
+
+        # Load jobs safely
+        jobs = load_jobs()
+
+        if not isinstance(jobs, list):
+            jobs = []
+
+        job_cards = []
+
+        for job in jobs:
+            if not isinstance(job, dict):
+                continue
+
+            required = {
+                norm(skill)
+                for skill in (skills_from_job(job) or [])
+                if str(skill).strip()
+            }
+
+            matched = len(candidate_skills & required)
+
+            fit = (
+                round(matched / len(required) * 100)
+                if required
+                else 0
+            )
+
+            # Make sure template fields always exist
+            safe_job = {
+                "id": job.get("id", ""),
+                "title": job.get("title", "Untitled Job"),
+                "location": job.get("location", ""),
+                "min_experience": job.get("min_experience", 0),
+                "description": job.get("description", ""),
+                "required_skills": job.get("required_skills", []),
+            }
+
+            if not isinstance(safe_job["required_skills"], list):
+                safe_job["required_skills"] = [
+                    str(x).strip()
+                    for x in str(safe_job["required_skills"]).split(",")
+                    if str(x).strip()
+                ]
+
+            job_cards.append({
+                "job": safe_job,
+                "fit": fit,
+                "matched": matched,
+                "total": len(required),
+            })
+
+        job_cards.sort(
+            key=lambda x: (
+                -x["fit"],
+                str(x["job"].get("title", "")).casefold()
+            )
+        )
+
+        return render_template(
+            "candidate_portal.html",
+            candidate=candidate,
+            index=index,
+            job_cards=job_cards[:8]
+        )
+
+    except Exception as exc:
+        app.logger.exception("Candidate dashboard error")
+
+        # Do not show a blank 500 page.
+        # Send the user back to candidate login.
+        return redirect(url_for("candidate_login"))
 
 @app.get("/candidate-dashboard/<int:index>")
 def candidate_dashboard_legacy(index):
