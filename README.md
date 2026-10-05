@@ -1,5 +1,5 @@
 # AI-DRIVEN SMART HIRING PLATFORM WITH CANDIDATE MATCHING COPILOT
-  live demo :  https://ai-driven-smart-hiring-platform.onrender.com
+  live demo :   https://ai-driven-smart-hiring-platform.onrender.com
 ## Project Objective
 
 The **AI-Driven Smart Hiring Platform with Candidate Matching Copilot** was developed to simplify the recruitment process by automating important activities such as resume screening, candidate-job matching, skill-gap identification, interview assistance, ATS candidate management, interview simulation, analytics, and voice-based screening.
