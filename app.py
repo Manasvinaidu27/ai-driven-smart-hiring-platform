@@ -1504,30 +1504,6 @@ def candidate_interview_page():
     return render_template("candidate_interview.html", jobs=jobs)
 
 
-@app.get("/api/candidate-interview/questions/<job_id>")
-def candidate_interview_questions(job_id):
-    job = next(
-        (j for j in load_jobs()
-         if str(j.get("id", "")).strip() == str(job_id).strip()),
-        None
-    )
-
-    if not job:
-        return jsonify(
-            success=False,
-            error="Job not found."
-        ), 404
-
-    questions = candidate_practice_questions_for_job(job)
-
-    return jsonify(
-        success=True,
-        audience="candidate",
-        job=job,
-        questions=questions,
-        overlap_percentage=100,
-        note="Exactly the same 40 questions are used in the Recruiter Portal and Candidate Portal."
-    )
 
 
 
