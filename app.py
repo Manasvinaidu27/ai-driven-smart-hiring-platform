@@ -541,6 +541,24 @@ def api_candidates():
     return jsonify(load_candidates())
 
 
+@app.get("/api/candidates/export")
+def export_candidates():
+    candidates = load_candidates()
+
+    if not candidates:
+        return jsonify(error="No candidate profiles available for export."), 404
+
+    output = DATA_DIR / "all_candidates.csv"
+    profile_to_dataframe(candidates).to_csv(output, index=False)
+
+    return send_file(
+        output,
+        as_attachment=True,
+        download_name="all_candidates.csv",
+        mimetype="text/csv"
+    )
+
+
 @app.get("/api/profile/<int:index>/download")
 def download_profile(index):
     candidates = load_candidates()
