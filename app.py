@@ -1408,23 +1408,55 @@ def interview_page():
     return render_template("interview.html", jobs=jobs, candidates=candidates)
 
 
-@app.get("/api/interview/questions/<job_id>")
-def interview_questions(job_id):
-    job = next((j for j in load_jobs() if str(j.get("id", "")) == str(job_id)), None)
-    if not job:
-        return jsonify(success=False, error="Job not found."), 404
-    questions = shared_40_questions_for_job(job)
-    qtype = str(request.args.get("type") or "all").strip().lower()
-    if qtype == "descriptive":
-        questions = questions[:20]
-    elif qtype == "mcq":
-        questions = questions[20:]
-    elif qtype != "all":
-        # Preserve the existing filter UI but keep the canonical 40-question exam for All.
-        questions = [q for q in questions if q.get("type") == qtype][:40]
-    return jsonify(success=True, audience="recruiter", job=job, questions=questions,
-                   question_count=len(questions), total_questions=40,
-                   split={"descriptive":20,"mcq":20})
+@app.get("/api/candidate-interview/questions/<job_id>")
+def candidate_interview_questions(job_id):
+    try:
+        job = next(
+            (
+                j for j in load_jobs()
+                if str(j.get("id", "")).strip() == str(job_id).strip()
+            ),
+            None
+        )
+
+        if not job:
+            return jsonify(
+                success=False,
+                error=f"Job not found: {job_id}"
+            ), 404
+
+        questions = candidate_practice_questions_for_job(job)
+
+        if not isinstance(questions, list):
+            return jsonify(
+                success=False,
+                error="Question generator did not return a list."
+            ), 500
+
+        if len(questions) != 40:
+            return jsonify(
+                success=False,
+                error=f"Expected 40 questions, but generated {len(questions)}."
+            ), 500
+
+        return jsonify(
+            success=True,
+            audience="candidate",
+            job=job,
+            questions=questions,
+            question_count=40,
+            total_questions=40,
+            overlap_percentage=100,
+            note="Exactly the same 40 questions are used in the Recruiter Portal and Candidate Portal."
+        )
+
+    except Exception as exc:
+        app.logger.exception("Candidate interview question generation failed")
+
+        return jsonify(
+            success=False,
+            error=f"Candidate interview question generation failed: {type(exc).__name__}: {exc}"
+        ), 500
 
 @app.get("/api/voice-screening/questions/<job_id>")
 def voice_screening_questions(job_id):
