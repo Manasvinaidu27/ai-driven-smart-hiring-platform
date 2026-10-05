@@ -94,7 +94,7 @@ def candidate_login():
     if request.method == "POST":
         # One-click demo sign-in for presentations/testing.
         if request.form.get("demo_login") == "1":
-             session.clear(); session["logged_in"] = True; session["role"] = "candidate"; session["demo_candidate"] = True
+            session.clear(); session["logged_in"] = True; session["role"] = "candidate"; session["demo_candidate"] = True
             return redirect(url_for("candidate_dashboard"))
 
         email = request.form.get("email", "").strip().casefold()
@@ -170,6 +170,26 @@ def _read_json_file(path, default):
         return value if isinstance(value, type(default)) else default
     except (OSError, json.JSONDecodeError, TypeError):
         return default
+
+
+def _dashboard_candidate_rows(candidates, jobs):
+    rows = []
+    for index, candidate in enumerate(candidates):
+        best = None
+        best_job = None
+        for job in jobs:
+            result = match_candidate_to_job(candidate, job)
+            if best is None or result.get("score", 0) > best.get("score", 0):
+                best, best_job = result, job
+        if best is None:
+            best = {"score": 0, "recommendation": "Not scored", "missing_skills": [], "matched_skills": []}
+        rows.append({
+            "index": index,
+            "name": candidate.get("name") or "Unknown Candidate",
+            "email": candidate.get("email") or "Not detected",
+            "job": (best_job or {}).get("title", "No job selected"),
+            "score": round(float(best.get("score", 0))),
+            "recommendation": best.get("recommendation", "Not scored"),
             "missing_skills": best.get("missing_skills", [])[:5],
             "matched_skills": best.get("matched_skills", [])[:5],
         })
@@ -256,6 +276,80 @@ def load_jobs():
 
 def save_jobs(jobs):
     JOBS_FILE.write_text(json.dumps(jobs[:100], indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+@app.get("/jobs")
+def jobs_page():
+    if session.get("role") == "candidate":
+        candidates=load_candidates(); idx=session.get("candidate_index",0); c=candidates[idx] if isinstance(idx,int) and 0 <= idx < len(candidates) else {}
+        cs={norm(x) for x in (c.get("skills",[]) or [])}
+        cards=[]
+        for job in load_jobs():
+            req={norm(x) for x in skills_from_job(job)}; matched=len(cs & req); fit=round(matched/max(len(req),1)*100) if req else 0
+            cards.append({"job":job,"fit":fit})
+        cards.sort(key=lambda x:-x["fit"])
+        return render_template("candidate_jobs.html", candidate=c, job_cards=cards)
+    return render_template("job_postings.html", jobs=load_jobs())
+
+
+@app.get("/api/jobs")
+def api_jobs():
+    return jsonify(load_jobs())
+
+
+@app.post("/api/jobs/analyze")
+def analyze_job_description_api():
+    """Analyze pasted text or an uploaded PDF/DOCX job description."""
+    try:
+        if "file" in request.files and request.files["file"].filename:
+            uploaded = request.files["file"]
+            filename = uploaded.filename or "job_description"
+            suffix = Path(filename).suffix.lower()
+            if suffix not in {".pdf", ".docx"}:
+                return jsonify(success=False, error="Upload a PDF or DOCX job description."), 400
+            safe_name = re.sub(r"[^A-Za-z0-9._-]", "_", filename)
+            path = UPLOAD_DIR / f"jd_{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S%f')}_{safe_name}"
+            uploaded.save(path)
+            try:
+                profile = analyze_job_file(path)
+            finally:
+                try:
+                    path.unlink(missing_ok=True)
+                except OSError:
+                    pass
+        else:
+            text = str((request.get_json(silent=True) or {}).get("text", "")).strip()
+            if not text:
+                return jsonify(success=False, error="Paste a job description or upload a PDF/DOCX file."), 400
+            profile = analyze_job_description(text, "pasted_job_description.txt")
+
+        if not profile.get("required_skills"):
+            return jsonify(success=False, error="No required skills were detected. Add a skills/requirements section and analyze again.", profile=profile), 422
+        return jsonify(success=True, profile=profile)
+    except Exception as exc:
+        return jsonify(success=False, error=f"Could not analyze the job description: {exc}"), 400
+
+
+@app.post("/api/jobs")
+def create_job():
+    payload = request.get_json(silent=True) or {}
+    title = str(payload.get("title", "")).strip()
+    required_skills = payload.get("required_skills", [])
+    if isinstance(required_skills, str):
+        required_skills = [x.strip() for x in required_skills.replace(";", ",").split(",") if x.strip()]
+    required_skills = [str(x).strip() for x in required_skills if str(x).strip()]
+    if not title:
+        return jsonify(success=False, error="Job title is required."), 400
+    if not required_skills:
+        return jsonify(success=False, error="Add at least one required skill."), 400
+
+    try:
+        min_experience = max(float(payload.get("min_experience", 0) or 0), 0)
+    except (TypeError, ValueError):
+        min_experience = 0
+
+    jobs = load_jobs()
+    job = {
         "id": max([int(j.get("id", 0)) for j in jobs if str(j.get("id", "")).isdigit()] or [0]) + 1,
         "title": title,
         "required_skills": required_skills,
@@ -334,84 +428,24 @@ def api_candidate_insights():
 @app.get("/candidate-dashboard")
 def candidate_dashboard():
     try:
-        candidates = load_candidates()  
-                "total": len(required),
-            })
+        candidates = load_candidates()
 
-        job_cards.sort(
-            key=lambda x: (
-                -x["fit"],
-                str(x["job"].get("title", "")).casefold()
-            )
-        )
+        # Demo candidate login
+        if session.get("demo_candidate"):
+            candidate = DEMO_CANDIDATE.copy()
+            index = -1
 
-        return render_template(
-            "candidate_portal.html",
-            candidate=candidate,
-            index=index,
-            job_cards=job_cards[:8]
-        )
+        else:
+            index = session.get("candidate_index")
 
-    except Exception as exc:
-        app.logger.exception("Candidate dashboard error")
+            if (
+                index is None
+                or not isinstance(index, int)
+                or not 0 <= index < len(candidates)
+            ):
+                return redirect(url_for("candidate_login"))
 
-        # Do not show a blank 500 page.
-        # Send the user back to candidate login.
-        return redirect(url_for("candidate_login"))
-
-@app.get("/candidate-dashboard/<int:index>")
-def candidate_dashboard_legacy(index):
-    if session.get("role") == "candidate":
-        session["candidate_index"] = index
-        return redirect(url_for("candidate_dashboard"))
-    return redirect(url_for("candidates"))
-
-@app.get("/report/<int:index>")
-def analysis_report(index):
-    candidates=load_candidates()
-    if not 0 <= index < len(candidates): return redirect(url_for("candidates"))
-    candidate=candidates[index]
-    return render_template("report.html", candidate=candidate, index=index, summary=profile_summary(candidate), next_steps=next_steps(candidate))
-
-def create_analysis_pdf(candidate, output):
-    styles=getSampleStyleSheet()
-    title=ParagraphStyle("ReportTitle", parent=styles["Title"], fontSize=20, leading=24, textColor=colors.HexColor("#10264a"), alignment=TA_CENTER)
-    h=ParagraphStyle("H", parent=styles["Heading2"], fontSize=12, leading=15, textColor=colors.HexColor("#2459ad"))
-    body=ParagraphStyle("B", parent=styles["BodyText"], fontSize=9, leading=13, textColor=colors.HexColor("#43546d"))
-    doc=SimpleDocTemplate(str(output), pagesize=A4, rightMargin=38,leftMargin=38,topMargin=38,bottomMargin=38)
-    story=[Paragraph("AI Resume Analysis Report",title), Spacer(1,10), Paragraph(f"<b>Candidate:</b> {candidate.get('name','Not detected')}",body), Paragraph(f"<b>Email:</b> {candidate.get('email','Not detected')} &nbsp;&nbsp; <b>Location:</b> {candidate.get('location','Not detected')}",body), Spacer(1,12), Paragraph("Executive Summary",h), Paragraph(profile_summary(candidate),body), Spacer(1,10)]
-    data=[["Metric","Detected"] ,["Profile completeness",f"{candidate.get('confidence',0)}%"],["Skills",str(len(candidate.get('skills',[]) or []))],["Projects",str(len(candidate.get('projects',[]) or []))],["Certifications",str(len(candidate.get('certifications',[]) or []))]]
-    t=Table(data,colWidths=[250,120]); t.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,0),colors.HexColor("#eaf2ff")),("TEXTCOLOR",(0,0),(-1,0),colors.HexColor("#2459ad")),("GRID",(0,0),(-1,-1),.4,colors.HexColor("#dce6f2")),("FONTNAME",(0,0),(-1,-1),"Helvetica"),("FONTSIZE",(0,0),(-1,-1),9),("VALIGN",(0,0),(-1,-1),"TOP"),("BOTTOMPADDING",(0,0),(-1,-1),7),("TOPPADDING",(0,0),(-1,-1),7)])); story += [t,Spacer(1,14),Paragraph("Detected Skills",h),Paragraph(", ".join(candidate.get("skills",[]) or []) or "Not detected",body),Spacer(1,10),Paragraph("Education",h)]
-    for x in candidate.get("education",[]) or []: story.append(Paragraph(x,body))
-    story += [Spacer(1,8),Paragraph("Experience",h)]
-    exp=candidate.get("experience",{}) or {}
-    story.append(Paragraph(exp.get("total_experience") or "No duration detected",body))
-    for x in exp.get("roles",[]) or []: story.append(Paragraph(x,body))
-    story += [Spacer(1,8),Paragraph("Projects & Certifications",h)]
-    for x in candidate.get("projects",[]) or []: story.append(Paragraph("Project: "+x,body))
-    for x in candidate.get("certifications",[]) or []: story.append(Paragraph("Certification: "+x,body))
-    story += [Spacer(1,8),Paragraph("Improvement Suggestions",h)]
-    for x in next_steps(candidate): story.append(Paragraph("• "+x,body))
-    doc.build(story)
-
-@app.get("/api/profile/<int:index>/report")
-def download_analysis_report(index):
-    candidates=load_candidates()
-    if not 0 <= index < len(candidates): return jsonify(error="Candidate not found."),404
-    output=DATA_DIR / f"candidate_{index+1}_resume_analysis.pdf"
-    create_analysis_pdf(candidates[index],output)
-    return send_file(output, as_attachment=True, download_name=f"{(candidates[index].get('name') or 'candidate').replace(' ','_')}_resume_analysis.pdf", mimetype="application/pdf")
-
-@app.get("/candidates")
-def candidates():
-    return render_template("candidates.html", candidates=load_candidates())
-
-
-@app.get("/candidate-database")
-def candidate_database():
-    """Recruiter-facing view of the persistent SQLite candidate store."""
-    candidates = load_candidates()
-    return render_template("candidate_database.html", candidates=candidates, db_file=DB_FILE.name, database_path=str(DB_FILE))
+            candidate = candidates[index]
 
         # Make sure candidate data is always safe
         if not isinstance(candidate, dict):
@@ -499,6 +533,15 @@ def candidate_database():
         # Do not show a blank 500 page.
         # Send the user back to candidate login.
         return redirect(url_for("candidate_login"))
+
+@app.get("/candidate-dashboard/<int:index>")
+def candidate_dashboard_legacy(index):
+    if session.get("role") == "candidate":
+        session["candidate_index"] = index
+        return redirect(url_for("candidate_dashboard"))
+    return redirect(url_for("candidates"))
+
+@app.get("/report/<int:index>")
 def analysis_report(index):
     candidates=load_candidates()
     if not 0 <= index < len(candidates): return redirect(url_for("candidates"))
@@ -578,6 +621,119 @@ def parse_resume():
         return jsonify(success=True, profile=profile, candidate_index=profile_index, candidate_id=profile.get("candidate_id"), storage="SQLite candidate database", report_url=url_for("analysis_report", index=profile_index), report_download_url=url_for("download_analysis_report", index=profile_index))
     except Exception as exc:
         return jsonify(success=False, error=str(exc)), 500
+
+
+@app.get("/api/candidates")
+def api_candidates():
+    return jsonify(load_candidates())
+
+
+@app.get("/api/candidates/export")
+def export_candidates():
+    candidates = load_candidates()
+
+    if not candidates:
+        return jsonify(error="No candidate profiles available for export."), 404
+
+    output = DATA_DIR / "all_candidates.csv"
+    profile_to_dataframe(candidates).to_csv(output, index=False)
+
+    return send_file(
+        output,
+        as_attachment=True,
+        download_name="all_candidates.csv",
+        mimetype="text/csv"
+    )
+
+
+@app.get("/api/profile/<int:index>/download")
+def download_profile(index):
+    candidates = load_candidates()
+    if not 0 <= index < len(candidates):
+        return jsonify(error="Candidate not found."), 404
+
+    output = DATA_DIR / f"candidate_{index + 1}_profile.csv"
+    profile_to_dataframe([candidates[index]]).to_csv(output, index=False)
+    return send_file(output, as_attachment=True, download_name="candidate_profile.csv", mimetype="text/csv")
+
+
+
+# Interview question architecture:
+# - Recruiter interview: 10 assessment questions per role.
+# - Candidate practice exam: 10 questions per role.
+# - Exactly 5/10 (50%) of candidate questions test the same competencies as
+#   recruiter questions, but are worded differently. The other 5 are practice-only.
+ROLE_QUESTION_PROFILES = {
+    "python api developer": {
+        "skills": ["Python", "REST APIs", "Django", "SQL"],
+        "recruiter": [
+            ("technical", "How would you design a versioned REST API in Python for a resource with create, read, update and delete operations?"),
+            ("technical", "How would you handle exceptions, logging and validation in a Python API running in production?"),
+            ("technical", "How would you investigate and improve a slow SQL query used by an API endpoint?"),
+            ("technical", "How would you secure an API against unauthorized access, invalid input and common web vulnerabilities?"),
+            ("situational", "An API suddenly starts returning 500 errors after a deployment. What would you check first and how would you communicate the incident?"),
+            ("technical", "How would you structure automated unit and API tests for a Python service?"),
+            ("technical", "When would you use synchronous versus asynchronous processing in an API?"),
+            ("technical", "How would you design pagination, filtering and error responses for a REST endpoint used by many clients?"),
+            ("situational", "A new endpoint works locally but is slow in production. Walk through your diagnosis and remediation plan."),
+            ("behavioral", "Tell me about a backend problem you solved and how you measured that your solution worked.")
+        ],
+        "candidate_shared": [
+            ("technical", "For practice: explain how you would build a Python REST API with CRUD operations and keep its API versions compatible."),
+            ("technical", "For practice: what would you include in Python API error handling, logging and input validation for a production service?"),
+            ("technical", "For practice: list the steps you would take to find the cause of a slow SQL query behind an API."),
+            ("technical", "For practice: describe practical ways to protect a REST API from unauthorized requests and bad input."),
+            ("situational", "For practice: a Python API begins returning 500 errors after release. Describe your troubleshooting sequence.")
+        ],
+        "candidate_unique": [
+            ("technical", "Practice: what is the difference between PUT and PATCH, and when would you use each?"),
+            ("technical", "Practice: how would you use Git branches and pull requests while developing an API feature?"),
+            ("technical", "Practice: explain how authentication and authorization are different."),
+            ("technical", "Practice: how would you return useful HTTP status codes from a REST API?"),
+            ("behavioral", "Practice: describe a project where you learned a backend technology quickly.")
+        ]
+    },
+    "backend engineer": {
+        "skills": ["Python", "APIs", "SQL", "Git"],
+        "recruiter": [
+            ("technical", "How would you design a maintainable backend service with clear modules, validation and error handling?"),
+            ("technical", "How would you diagnose a backend endpoint whose response time has increased significantly?"),
+            ("technical", "How would you design database transactions so partial updates do not leave inconsistent data?"),
+            ("technical", "How would you secure authentication, authorization and sensitive data in a backend application?"),
+            ("situational", "A production backend is failing for only some users. How would you isolate the issue?"),
+            ("technical", "How would you test service logic and database interactions before deployment?"),
+            ("technical", "When would you introduce caching, and what consistency problems would you consider?"),
+            ("technical", "How would you design an API contract so frontend and backend teams can work independently?"),
+            ("situational", "A dependency update breaks an existing service. What would you do before and after rolling back?"),
+            ("behavioral", "Describe a backend design decision you made and how you evaluated its trade-offs.")
+        ],
+        "candidate_shared": [
+            ("technical", "Practice: outline how you would organize a backend service so that validation, business logic and errors stay manageable."),
+            ("technical", "Practice: what would you inspect when one backend endpoint becomes slow?"),
+            ("technical", "Practice: explain how transactions can protect a database from partial updates."),
+            ("technical", "Practice: how would you protect users and data with authentication and authorization?"),
+            ("situational", "Practice: some users report a backend failure while others are unaffected. How would you investigate?")
+        ],
+        "candidate_unique": [
+            ("technical", "Practice: what is an API endpoint and what makes an API easy for another developer to consume?"),
+            ("technical", "Practice: explain indexing in a relational database in simple terms."),
+            ("technical", "Practice: when might caching make an application faster?"),
+            ("technical", "Practice: what information should a useful application log contain?"),
+            ("behavioral", "Practice: tell me about a time you debugged a difficult programming issue.")
+        ]
+    },
+    "data analyst": {
+        "skills": ["SQL", "Python", "Pandas", "Power BI", "Excel"],
+        "recruiter": [
+            ("technical", "How would you clean and validate a new dataset before using it for analysis?"),
+            ("technical", "How would you write SQL to find top-performing categories while avoiding duplicate records?"),
+            ("technical", "How would you design a Power BI dashboard for a business stakeholder and choose its first KPIs?"),
+            ("technical", "What is the difference between a Power BI calculated column and a measure?"),
+            ("situational", "A stakeholder's report contains numbers that conflict with the source system. How would you investigate and communicate the issue?"),
+            ("technical", "How would you use Pandas to identify missing values, duplicates and unusual records?"),
+            ("technical", "How would you check whether an observed change in a KPI is meaningful rather than caused by a data-quality issue?"),
+            ("technical", "How would you structure an Excel analysis so another analyst can audit your calculations?"),
+            ("situational", "A manager asks for a dashboard by tomorrow but the data is incomplete. What would you deliver and how would you communicate limitations?"),
             ("behavioral", "Tell me about an analysis or dashboard where your findings changed a decision.")
         ],
         "candidate_shared": [
@@ -682,7 +838,95 @@ def parse_resume():
             ("behavioral", "Practice: describe an ML project you built and the result you achieved.")
         ]
     },
-            "skills": ["SQL", "Excel", "Power BI", "Requirements Analysis", "Communication"],
+    "ai engineer": {
+        "skills": ["Python", "Artificial Intelligence", "Machine Learning", "NLP", "APIs"],
+        "recruiter": [
+            ("technical", "How would you design an AI feature from data preparation through model evaluation and API integration?"),
+            ("technical", "How would you evaluate whether an AI system is producing useful and reliable outputs?"),
+            ("technical", "How would you handle incomplete, noisy or biased training data?"),
+            ("technical", "How would you expose an AI model through a production API safely?"),
+            ("situational", "An AI feature performs well in testing but produces inconsistent outputs for real users. How would you investigate?"),
+            ("technical", "How would you reduce latency and cost in an AI inference pipeline?"),
+            ("technical", "How would you log and monitor AI predictions after deployment?"),
+            ("technical", "How would you design fallback behavior when an AI service is unavailable?"),
+            ("situational", "A model's output is technically valid but does not meet the business requirement. What would you change?"),
+            ("behavioral", "Tell me about an AI project where evaluation changed your implementation.")
+        ],
+        "candidate_shared": [
+            ("technical", "Practice: outline the steps for taking an AI idea from data preparation to a working API feature."),
+            ("technical", "Practice: what measures would you use to decide whether an AI feature is reliable and useful?"),
+            ("technical", "Practice: how would you prepare noisy or incomplete data before using it for AI?"),
+            ("technical", "Practice: what should you consider when exposing an AI model through an API?"),
+            ("situational", "Practice: an AI feature gives inconsistent results to users although testing looked good. What would you inspect?")
+        ],
+        "candidate_unique": [
+            ("technical", "Practice: what is NLP and give one practical application."),
+            ("technical", "Practice: what is inference in a machine-learning system?"),
+            ("technical", "Practice: why is monitoring important after deploying an AI model?"),
+            ("technical", "Practice: what is the difference between training and inference?"),
+            ("behavioral", "Practice: explain an AI project you built in simple terms.")
+        ]
+    },
+    "power bi developer": {
+        "skills": ["Power BI", "DAX", "SQL", "Data Modeling", "Excel"],
+        "recruiter": [
+            ("technical", "How would you design a Power BI data model for multiple business entities and avoid ambiguous relationships?"),
+            ("technical", "What is the difference between a DAX measure and calculated column, and how does filter context affect them?"),
+            ("technical", "How would you optimize a slow Power BI report?"),
+            ("technical", "How would you validate dashboard numbers against the source data?"),
+            ("situational", "A stakeholder says a KPI is wrong while the underlying SQL data appears correct. How would you investigate?"),
+            ("technical", "How would you choose visuals for trends, comparisons and composition?"),
+            ("technical", "How would you implement row-level security for different users?"),
+            ("technical", "How would you manage refresh failures and communicate stale-data risk?"),
+            ("situational", "A dashboard has too many visuals and users cannot find the important KPIs. How would you improve it?"),
+            ("behavioral", "Describe a dashboard you built and how you measured whether stakeholders found it useful.")
+        ],
+        "candidate_shared": [
+            ("technical", "Practice: explain how you would model related business tables in Power BI."),
+            ("technical", "Practice: explain measures versus calculated columns and give a situation for each."),
+            ("technical", "Practice: list steps you would take when a Power BI report is slow."),
+            ("technical", "Practice: how would you verify that a dashboard KPI matches the source system?"),
+            ("situational", "Practice: the source data looks correct but a Power BI KPI looks wrong. How would you trace the issue?")
+        ],
+        "candidate_unique": [
+            ("technical", "Practice: what is DAX used for?"),
+            ("technical", "Practice: what is a slicer in Power BI?"),
+            ("technical", "Practice: what is row-level security?"),
+            ("technical", "Practice: which visual would you use for a monthly trend?"),
+            ("behavioral", "Practice: describe one Power BI dashboard you have created.")
+        ]
+    },
+    "cloud devops engineer": {
+        "skills": ["AWS", "Docker", "CI/CD", "Linux", "Git"],
+        "recruiter": [
+            ("technical", "How would you deploy an application to the cloud with separate development, testing and production environments?"),
+            ("technical", "What would you monitor after deployment and how would you investigate a sudden increase in errors?"),
+            ("technical", "How would you design cloud identity, network and data-access controls securely?"),
+            ("technical", "How does CI/CD reduce deployment risk and where would you add automated tests?"),
+            ("situational", "An application works locally but fails after deployment. What would you check first?"),
+            ("technical", "How would you containerize an application and manage configuration separately from the image?"),
+            ("technical", "How would you design backups and recovery for a production database?"),
+            ("technical", "How would you control infrastructure changes so they are reviewable and repeatable?"),
+            ("situational", "A service becomes unavailable during peak traffic. How would you restore it safely and then investigate the root cause?"),
+            ("behavioral", "Describe a deployment or automation problem you solved.")
+        ],
+        "candidate_shared": [
+            ("technical", "Practice: describe how you would separate cloud environments for development, testing and production."),
+            ("technical", "Practice: which logs and metrics would you inspect when a deployed service starts returning errors?"),
+            ("technical", "Practice: what cloud security controls would you consider for identities, networks and data?"),
+            ("technical", "Practice: explain how a CI/CD pipeline can reduce deployment mistakes."),
+            ("situational", "Practice: software works locally but fails in the cloud. Give a troubleshooting sequence.")
+        ],
+        "candidate_unique": [
+            ("technical", "Practice: what problem does Docker solve?"),
+            ("technical", "Practice: why should secrets not be hard-coded in source code?"),
+            ("technical", "Practice: what is a CI/CD pipeline?"),
+            ("technical", "Practice: what is the purpose of a production backup?"),
+            ("behavioral", "Practice: describe a time you automated a repetitive technical task.")
+        ]
+    },
+    "business analyst": {
+        "skills": ["SQL", "Excel", "Power BI", "Requirements Analysis", "Communication"],
         "recruiter": [
             ("situational", "How would you gather and validate requirements when different stakeholders want different outcomes?"),
             ("technical", "How would you turn a business problem into measurable KPIs and an analysis plan?"),
@@ -760,7 +1004,57 @@ def parse_resume():
             ("technical", "Practice: what does a database transaction protect you from?"),
             ("situational", "Practice: a query becomes slow as the database grows. What would you check?")
         ],
-                ],
+        "candidate_unique": [
+            ("technical", "Practice: what is a primary key?"),
+            ("technical", "Practice: what is an index?"),
+            ("technical", "Practice: explain INNER JOIN versus LEFT JOIN."),
+            ("technical", "Practice: what is SQL injection and how can applications prevent it?"),
+            ("behavioral", "Practice: describe a database query or project you worked on.")
+        ]
+    },
+    "cybersecurity analyst": {
+        "skills": ["Cybersecurity", "Networking", "Linux", "Risk Analysis", "SIEM"],
+        "recruiter": [
+            ("technical", "How would you investigate an alert that may indicate unauthorized access?"),
+            ("technical", "How would you assess risk when a vulnerability is discovered in a business system?"),
+            ("technical", "How would you use logs to build a timeline of a security incident?"),
+            ("technical", "How would you reduce the impact of compromised credentials?"),
+            ("situational", "A suspicious login is detected from an unusual location. What would you investigate before escalating?"),
+            ("technical", "How would you explain the difference between vulnerability, threat and risk?"),
+            ("technical", "How would you prioritize security findings for remediation?"),
+            ("technical", "What information would you expect a SIEM to help correlate?"),
+            ("situational", "A phishing incident affects several employees. What immediate steps would you recommend to the response team?"),
+            ("behavioral", "Describe a security-learning or lab project and what you learned.")
+        ],
+        "candidate_shared": [
+            ("technical", "Practice: outline how you would investigate a security alert for possible unauthorized access."),
+            ("technical", "Practice: how would you assess the risk of a newly discovered vulnerability?"),
+            ("technical", "Practice: how can logs help reconstruct a security incident?"),
+            ("technical", "Practice: what steps can reduce damage after credentials are compromised?"),
+            ("situational", "Practice: a login appears suspicious because of its location. What evidence would you check?")
+        ],
+        "candidate_unique": [
+            ("technical", "Practice: define threat, vulnerability and risk."),
+            ("technical", "Practice: what is a SIEM used for?"),
+            ("technical", "Practice: what is phishing?"),
+            ("technical", "Practice: why is least privilege important?"),
+            ("behavioral", "Practice: describe a cybersecurity lab or project you completed.")
+        ]
+    },
+    "product manager": {
+        "skills": ["Product Management", "Requirements", "Analytics", "Communication", "Prioritization"],
+        "recruiter": [
+            ("situational", "How would you prioritize competing product requests when engineering capacity is limited?"),
+            ("technical", "How would you define success metrics for a new product feature?"),
+            ("situational", "How would you handle conflicting feedback from customers, sales and engineering?"),
+            ("technical", "How would you turn a customer problem into a clear product requirement?"),
+            ("situational", "A feature has shipped but adoption is low. How would you investigate and decide what to do next?"),
+            ("technical", "How would you use product data to identify a meaningful user problem?"),
+            ("technical", "How would you write acceptance criteria for a feature?"),
+            ("situational", "A high-priority request appears just before a committed release. How would you evaluate it?"),
+            ("behavioral", "Tell me about a time you influenced a decision without direct authority."),
+            ("behavioral", "Describe a product or project decision that you changed after receiving new evidence.")
+        ],
         "candidate_shared": [
             ("situational", "Practice: several important features compete for limited development time. How would you prioritize them?"),
             ("technical", "Practice: what metrics would you choose to tell whether a new feature is successful?"),
@@ -857,7 +1151,134 @@ def recruiter_questions_for_job(job):
         ("behavioral", "Describe a challenge you faced while learning or using {skill} and how you handled it."),
         ("behavioral", "How would you explain your work with {skill} to a non-technical stakeholder?"),
     ]
-                ("Why model relationships between tables?", ["To connect related data for analysis","To change colors","To remove all keys","To create passwords"], 0),
+    generated=[]
+    for skill in skills[:10]:
+        for typ, tmpl in templates:
+            generated.append((typ, tmpl.format(skill=skill, title=title)))
+
+    # Role-level questions provide variety beyond individual skills.
+    role_templates=[
+        ("technical", f"What technical approach would you take when starting a new {title} project?"),
+        ("technical", f"How would you review the quality of another person's work in a {title} role?"),
+        ("technical", f"How would you troubleshoot a defect that you cannot reproduce consistently in a {title} project?"),
+        ("technical", f"How would you document an important technical decision in a {title} project?"),
+        ("situational", f"A critical issue appears just before a {title} project deadline. How would you prioritize your response?"),
+        ("situational", f"Requirements change after you have started a {title} task. How would you handle the change?"),
+        ("situational", f"You receive incomplete information for a {title} assignment. What would you do first?"),
+        ("behavioral", f"Tell me about a project that best demonstrates your preparation for a {title} position."),
+        ("behavioral", f"Describe a time you received difficult feedback on your work and how you responded."),
+        ("behavioral", f"How do you prioritize multiple tasks when working as a {title}?"),
+    ]
+    generated.extend(role_templates)
+
+    # Deduplicate while preserving order, then fill from base/profile and generated.
+    items=[]; seen=set()
+    for typ,q in base + generated:
+        k=(typ.lower(),q.strip().lower())
+        if k not in seen:
+            seen.add(k); items.append((typ,q))
+        if len(items)>=40: break
+    # Absolute fallback if an unusual role has insufficient skills.
+    while len(items)<40:
+        n=len(items)+1
+        typ=("technical" if n%3 else "behavioral")
+        items.append((typ, f"Question {n}: How would you demonstrate effective performance in the {title} role?"))
+    return [{"id": i+1, "type": typ, "question": q} for i,(typ,q) in enumerate(items[:40])]
+
+def _mcq_bank_for_role(job):
+    """Return exactly 20 role-specific MCQs shared by recruiter and candidate portals."""
+    title = (job.get("title") or "this role").strip()
+    key = _role_key(title) or ""
+    banks = {
+        "python api developer": [
+            ("Which HTTP method is normally used to retrieve a resource?", ["GET","POST","PATCH","DELETE"], 0),
+            ("Which status code normally indicates a successful resource creation?", ["200","201","301","404"], 1),
+            ("What is the main purpose of request validation in an API?", ["Accept every value","Reject invalid input before processing","Disable authentication","Increase page size"], 1),
+            ("Which format is commonly used for REST API request and response bodies?", ["JSON","BMP","EXE","WAV"], 0),
+            ("What should an API do when a requested resource does not exist?", ["Return an appropriate 4xx response","Return 200 with random data","Restart the server","Delete the database"], 0),
+            ("Which practice helps protect an API from unauthorized access?", ["Authentication and authorization","Removing validation","Using hard-coded passwords","Disabling logs"], 0),
+            ("What is a useful reason to version a public API?", ["To support controlled changes without breaking clients","To remove all endpoints","To avoid testing","To hide errors"], 0),
+            ("Which Python structure is best suited to store key-value pairs?", ["List","Tuple","Dictionary","Set"], 2),
+            ("What is a good way to handle unexpected API failures?", ["Log the error and return a safe response","Expose stack traces to users","Ignore every error","Delete the request"], 0),
+            ("Why are automated API tests useful?", ["They verify behavior consistently after changes","They remove the need for code","They guarantee zero bugs","They replace requirements"], 0),
+        ],
+        "data analyst": [
+            ("Which SQL clause groups rows for aggregate calculations?", ["GROUP BY","ORDER BY","WHERE","LIMIT"], 0),
+            ("Which function calculates an average in SQL?", ["SUM","AVG","COUNT","MAX"], 1),
+            ("What is the main purpose of data cleaning?", ["Improve data quality and consistency","Increase file size","Remove all columns","Hide missing values"], 0),
+            ("Which Power BI feature is commonly used to create calculated measures?", ["DAX","HTML","CSS","SMTP"], 0),
+            ("What does a primary key identify?", ["A unique row/entity","Every duplicate row","A chart color","A file extension"], 0),
+            ("Which visualization is generally suitable for showing a trend over time?", ["Line chart","Pie chart only","Scatterless text","Single KPI only"], 0),
+            ("Why should analysts validate source data before reporting?", ["To reduce incorrect conclusions","To make dashboards slower","To remove business context","To avoid documentation"], 0),
+            ("Which Pandas operation combines rows from two DataFrames using matching keys?", ["merge","print","sort_index only","describe only"], 0),
+            ("What is a KPI?", ["A key performance indicator","A Python package","A database password","A file format"], 0),
+            ("Which SQL clause filters rows before grouping?", ["WHERE","ORDER BY","GROUP BY","HAVING only"], 0),
+        ],
+        "full stack developer": [
+            ("Which technology is used to structure content on a web page?", ["HTML","SQL","SMTP","JSON only"], 0),
+            ("Which technology is primarily used to style web pages?", ["CSS","SQL","FTP","DAX"], 0),
+            ("What does JavaScript commonly add to a web application?", ["Client-side behavior and interactivity","Database backups only","DNS records","Hardware drivers"], 0),
+            ("Which HTTP status code represents a successful request?", ["200","404","500","301"], 0),
+            ("What is the purpose of a backend API?", ["Provide application data and operations to clients","Only change font colors","Replace the operating system","Format images"], 0),
+            ("Why use server-side validation as well as client-side validation?", ["Client checks can be bypassed","It makes HTML invalid","It removes security","It prevents all API calls"], 0),
+            ("Which database is relational?", ["MySQL","Redis only","HTML","CSS"], 0),
+            ("What does responsive design aim to provide?", ["Usable layouts across screen sizes","Only desktop pages","Only printed pages","Database replication"], 0),
+            ("What is version control used for?", ["Tracking code changes","Compressing images only","Hosting DNS","Replacing testing"], 0),
+            ("Why separate frontend and backend concerns?", ["To organize responsibilities and maintainability","To remove APIs","To prevent testing","To duplicate every file"], 0),
+        ],
+        "backend engineer": [
+            ("What is a backend service responsible for?", ["Business logic and data operations","Only page colors","Only browser tabs","Monitor brightness"], 0),
+            ("Which HTTP method is commonly used to update part of a resource?", ["PATCH","GET","OPTIONS only","TRACE"], 0),
+            ("Why use database transactions?", ["To keep related changes consistent","To make queries random","To remove constraints","To disable recovery"], 0),
+            ("What is input validation used for?", ["Checking data before processing","Increasing CPU speed","Replacing authentication","Deleting logs"], 0),
+            ("What is logging useful for in production?", ["Diagnosing behavior and failures","Storing passwords in plain text","Replacing backups","Hiding incidents"], 0),
+            ("What does caching commonly improve?", ["Response time for repeatable data","Password strength","Source-code formatting","Database schema correctness"], 0),
+            ("What is a database index designed to improve?", ["Lookup/query performance","Image resolution","HTTP encryption","HTML semantics"], 0),
+            ("What is authorization?", ["Checking what an authenticated user is allowed to do","Creating a password","Compressing JSON","Starting a server"], 0),
+            ("Why handle exceptions explicitly?", ["To fail safely and provide useful diagnostics","To ignore all errors","To expose secrets","To stop all requests"], 0),
+            ("What is an idempotent operation?", ["Repeating it has the same intended effect","It always fails","It requires a browser","It changes every record"], 0),
+        ],
+        "qa automation engineer": [
+            ("What is the purpose of an automated regression test?", ["Check that existing behavior still works","Replace requirements","Create production data","Disable releases"], 0),
+            ("Why are explicit waits useful in UI automation?", ["They wait for required conditions","They make tests random","They skip assertions","They delete cookies"], 0),
+            ("What is a test assertion?", ["A check that actual behavior matches expected behavior","A deployment script","A password","A browser extension"], 0),
+            ("What should a good automated test be?", ["Repeatable and isolated where practical","Random and stateful","Dependent on manual clicks","Without expected results"], 0),
+            ("What is smoke testing?", ["A quick check that critical functions work","Testing every edge case","Load testing only","Security scanning only"], 0),
+            ("Why use test data management?", ["To make tests predictable and maintainable","To hide defects","To remove assertions","To disable CI"], 0),
+            ("What does CI commonly do?", ["Automatically build and test changes","Only create UI designs","Replace source control","Delete test reports"], 0),
+            ("What is a flaky test?", ["A test that passes and fails inconsistently without intended code changes","A permanently failing test","A security test","A unit test with no assertions"], 0),
+            ("Why test negative scenarios?", ["To verify safe behavior for invalid inputs and failures","To reduce coverage","To avoid validation","To increase defects"], 0),
+            ("What is regression testing focused on?", ["Detecting unintended effects of changes","Designing logos","Creating resumes","Managing payroll"], 0),
+        ],
+        "machine learning engineer": [
+            ("Why split data into training and test sets?", ["To evaluate generalization on unseen data","To increase labels","To remove features","To avoid metrics"], 0),
+            ("What is overfitting?", ["A model learns training data too closely and generalizes poorly","A model has no features","A database error","A UI defect"], 0),
+            ("Which metric is commonly used for regression?", ["Mean squared error","Accuracy only","Precision only","Recall only"], 0),
+            ("What does feature scaling help with?", ["Putting numeric features on comparable scales for suitable algorithms","Deleting labels","Creating APIs","Encrypting models"], 0),
+            ("What is cross-validation used for?", ["Estimating model performance across different data splits","Deploying servers","Parsing PDFs","Creating SQL tables"], 0),
+            ("Why keep a test set untouched until evaluation?", ["To reduce leakage into final evaluation","To train twice","To increase bias","To remove predictions"], 0),
+            ("What is a hyperparameter?", ["A setting chosen outside the learned model parameters","A target label","A database row","An HTML element"], 0),
+            ("What is data leakage?", ["Information from outside the training process improperly influences learning/evaluation","Missing CSS","Slow APIs","A broken dashboard"], 0),
+            ("Why monitor a deployed ML model?", ["Data and model performance can change over time","Models never change","Monitoring replaces testing","It removes the need for data"], 0),
+            ("What is precision measuring?", ["The fraction of predicted positives that are correct","All actual positives","Training time","CPU usage"], 0),
+        ],
+        "ai engineer": [
+            ("What is an embedding?", ["A numeric representation capturing useful semantic relationships","A database password","A CSS class","A network cable"], 0),
+            ("Why evaluate an AI model on representative examples?", ["To measure behavior on relevant inputs","To increase file size","To avoid validation","To remove prompts"], 0),
+            ("What is prompt engineering?", ["Designing instructions and context to guide a model","Training a CPU","Creating database indexes","Styling a page"], 0),
+            ("What is hallucination in generative AI?", ["A confident but unsupported or incorrect generated response","A faster API","A database backup","A UI animation"], 0),
+            ("Why use retrieval-augmented generation?", ["To provide relevant external knowledge to generation","To remove all context","To disable search","To replace evaluation"], 0),
+            ("What is a model evaluation set?", ["Data used to assess model behavior","A production password","A CSS file","A network port"], 0),
+            ("Why protect sensitive prompts and outputs?", ["They may contain confidential information","They improve font size","They reduce latency automatically","They replace authentication"], 0),
+            ("What is temperature commonly used for in text generation?", ["Controlling randomness of sampling","Changing screen color","Changing database schema","Encrypting requests"], 0),
+            ("Why log model inputs and outputs carefully?", ["For debugging and evaluation while respecting privacy","To expose secrets","To disable monitoring","To avoid testing"], 0),
+            ("What is grounding an AI response?", ["Connecting the response to trusted, relevant evidence or context","Removing context","Randomizing answers","Disabling retrieval"], 0),
+        ],
+        "power bi developer": [
+            ("Which language is used for Power BI measures?", ["DAX","Python only","HTML","CSS"], 0),
+            ("What is a Power BI measure?", ["A calculation evaluated in filter context","A database server","A CSS rule","A PDF parser"], 0),
+            ("What does a slicer do?", ["Lets users filter report data interactively","Creates a database","Writes Python code","Deploys a server"], 0),
+            ("Why model relationships between tables?", ["To connect related data for analysis","To change colors","To remove all keys","To create passwords"], 0),
             ("What is a dashboard KPI useful for?", ["Quickly communicating an important performance measure","Replacing all reports","Storing raw PDFs","Running APIs"], 0),
             ("Why avoid unnecessary columns in a model?", ["To reduce model complexity and improve performance","To hide all data","To disable filters","To prevent refresh"], 0),
             ("What is Power Query mainly used for?", ["Data extraction and transformation","Browser automation","CSS styling","API authentication only"], 0),
@@ -950,9 +1371,140 @@ def recruiter_questions_for_job(job):
             ("Why communicate uncertainty in analysis?", ["To make conclusions and limitations clear","To hide assumptions","To remove evidence","To avoid stakeholders"], 0),
         ],
     }
-    def candidate_interview_page():
+    rows = banks.get(key, [])
+    if len(rows) < 20:
+        skills = skills_from_job(job) or [title]
+        fallback = [
+            ("What is a good practice when working with {skill}?", ["Validate, test, document, and monitor the work","Skip validation","Ignore requirements","Disable logging"], 0),
+            ("Why should {skill} work be tested before release?", ["To detect defects before users are affected","To avoid feedback","To remove documentation","To guarantee no future changes"], 0),
+        ]
+        i=0
+        while len(rows)<20:
+            skill=skills[i%len(skills)]
+            q,opts,idx=fallback[i%len(fallback)]
+            rows.append((q.format(skill=skill), opts, idx)); i+=1
+    out=[]
+    for i,(q,opts,idx) in enumerate(rows[:20]):
+        out.append({"id": i+21, "type":"mcq", "question":q, "options":opts, "answer_index":idx, "correct_answer":opts[idx]})
+    return out
+
+
+def shared_40_questions_for_job(job):
+    """Single canonical 40-question bank used by recruiter and candidate portals."""
+    descriptive = recruiter_questions_for_job(job)[:20]
+    descriptive = [{**q, "id": i+1, "type":"descriptive"} for i,q in enumerate(descriptive)]
+    mcqs = _mcq_bank_for_role(job)
+    return descriptive + [{**q, "id": i+21} for i,q in enumerate(mcqs)]
+
+
+def candidate_practice_questions_for_job(job):
+    return shared_40_questions_for_job(job)
+
+
+@app.get("/interview", endpoint="interview_page")
+def interview_page():
+    jobs = load_jobs()
+    candidates = load_candidates()
+    return render_template("interview.html", jobs=jobs, candidates=candidates)
+
+
+@app.get("/api/candidate-interview/questions/<job_id>")
+def candidate_interview_questions(job_id):
+    try:
+        job = next(
+            (
+                j for j in load_jobs()
+                if str(j.get("id", "")).strip() == str(job_id).strip()
+            ),
+            None
+        )
+
+        if not job:
+            return jsonify(
+                success=False,
+                error=f"Job not found: {job_id}"
+            ), 404
+
+        questions = candidate_practice_questions_for_job(job)
+
+        if not isinstance(questions, list):
+            return jsonify(
+                success=False,
+                error="Question generator did not return a list."
+            ), 500
+
+        if len(questions) != 40:
+            return jsonify(
+                success=False,
+                error=f"Expected 40 questions, but generated {len(questions)}."
+            ), 500
+
+        return jsonify(
+            success=True,
+            audience="candidate",
+            job=job,
+            questions=questions,
+            question_count=40,
+            total_questions=40,
+            overlap_percentage=100,
+            note="Exactly the same 40 questions are used in the Recruiter Portal and Candidate Portal."
+        )
+
+    except Exception as exc:
+        app.logger.exception("Candidate interview question generation failed")
+
+        return jsonify(
+            success=False,
+            error=f"Candidate interview question generation failed: {type(exc).__name__}: {exc}"
+        ), 500
+        
+
+@app.get("/api/voice-screening/questions/<job_id>")
+def voice_screening_questions(job_id):
+    job = next((j for j in load_jobs() if str(j.get("id", "")) == str(job_id)), None)
+    if not job:
+        return jsonify(success=False, error="Job not found."), 404
+    # Voice screening uses the descriptive half of the canonical bank.
+    questions = shared_40_questions_for_job(job)[:20]
+    return jsonify(success=True, job=job, questions=questions, question_count=20)
+
+
+@app.get("/voice-screening")
+def voice_screening_page():
+    return render_template("voice_screening.html", jobs=load_jobs(), candidates=load_candidates())
+
+
+@app.post("/api/voice-screening/save")
+def save_voice_screening():
+    payload = request.get_json(silent=True) or {}
+    answer = str(payload.get("answer") or "").strip()
+    question = str(payload.get("question") or "").strip()
+    candidate = str(payload.get("candidate") or "Unknown Candidate").strip()
+    job = str(payload.get("job") or "Unknown Job").strip()
+    if not answer:
+        return jsonify(success=False, error="Please provide an answer before saving."), 400
+    words = re.findall(r"\b[\w+#.-]+\b", answer)
+    score = min(100, 40 + min(len(words), 60))
+    feedback = "Good response. Add a concrete example and measurable outcome where possible." if len(words) >= 25 else "Add more detail, explain your steps clearly, and include a concrete example."
+    row = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "candidate": candidate, "job": job, "question": question, "answer": answer,
+        "score": score, "feedback": feedback, "input_source": payload.get("input_source", "voice"),
+    }
+    path = DATA_DIR / "voice_screening_results.json"
+    rows = _read_json_file(path, [])
+    rows.append(row)
+    path.write_text(json.dumps(rows[-500:], indent=2, ensure_ascii=False), encoding="utf-8")
+    return jsonify(success=True, result=row)
+
+
+@app.get("/candidate-interview")
+def candidate_interview_page():
     jobs = load_jobs()
     return render_template("candidate_interview.html", jobs=jobs)
+
+
+
 
 
 def _local_ai_evaluate(job, questions, answers):
@@ -1048,6 +1600,68 @@ def _extract_llm_json(raw):
     if not isinstance(result, dict) or "overall_score" not in result or "per_question" not in result:
         raise ValueError("AI response did not contain the required evaluation JSON")
     return result
+
+
+def ai_evaluate_interview(job, questions, answers):
+    """Use a configured OpenAI-compatible LLM; otherwise use the built-in evaluator.
+
+    The built-in evaluator means the demo remains fully functional without an API key.
+    When AI_API_URL and AI_API_KEY are supplied, the returned mode is ``ai-llm``.
+    """
+    if not (AI_API_URL and AI_API_KEY and AI_API_KEY.lower() not in {"your_api_key_here", "changeme"}):
+        return _local_ai_evaluate(job, questions, answers), "ai-local"
+    prompt = {
+        "role": job.get("title", "Unknown role"),
+        "required_skills": job.get("required_skills", []),
+        "instructions": "Evaluate objectively. Return JSON only with overall_score (0-100), strengths (array), improvements (array), and per_question (array of objects containing id, score, feedback, technical_relevance, communication, structure, specificity).",
+        "questions_and_answers": [
+            {"id": q["id"], "question": q["question"], "answer": answers[i] if i < len(answers) else ""}
+            for i, q in enumerate(questions)
+        ]
+    }
+    body = json.dumps({
+        "model": AI_MODEL,
+        "temperature": 0.2,
+        "messages": [
+            {"role": "system", "content": "You are an interview evaluator. Return valid JSON only."},
+            {"role": "user", "content": json.dumps(prompt)}
+        ],
+        "response_format": {"type": "json_object"}
+    }).encode()
+    try:
+        req=urllib.request.Request(AI_API_URL, data=body, method="POST", headers={
+            "Authorization": f"Bearer {AI_API_KEY}", "Content-Type": "application/json", "Accept": "application/json"
+        })
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            raw=json.loads(resp.read().decode("utf-8"))
+        return _extract_llm_json(raw), "ai-llm"
+    except Exception:
+        # Never break the interview because an optional external AI service failed.
+        return _local_ai_evaluate(job, questions, answers), "ai-local-fallback"
+
+@app.post("/api/candidate-interview/submit")
+def submit_candidate_interview():
+    payload = request.get_json(silent=True) or {}
+
+    job_id = str(payload.get("job_id") or "").strip()
+    answers = payload.get("answers") or []
+
+    if not job_id:
+        return jsonify(
+            success=False,
+            error="Invalid job selection."
+        ), 400
+
+    job = next(
+        (j for j in load_jobs()
+         if str(j.get("id", "")).strip() == job_id),
+        None
+    )
+
+    if not job:
+        return jsonify(
+            success=False,
+            error="Job not found."
         ), 404
     if not job:
         return jsonify(success=False, error="Job not found."), 404
@@ -1125,6 +1739,89 @@ def evaluate_interview():
 # while keeping the main application on Flask. A standalone FastAPI mock is also provided
 # in mock_ats_api.py for integration demos.
 MOCK_ATS_FILE = DATA_DIR / "mock_ats_candidates.json"
+
+DEMO_JOB_TITLES = [
+    "Python API Developer", "Data Analyst", "Full Stack Developer",
+    "Backend Engineer", "QA Automation Engineer", "Machine Learning Engineer",
+    "AI Engineer", "Power BI Developer", "Cloud DevOps Engineer",
+    "Business Analyst", "Frontend Developer", "Database SQL Developer",
+    "Cybersecurity Analyst", "Product Manager", "Data Scientist"
+]
+
+def _demo_job_for_candidate(candidate, index=0):
+    """Return the candidate's applied job, or a stable demo job when none exists."""
+    existing = str(candidate.get("job_applied") or "").strip()
+    if existing:
+        return existing
+    return DEMO_JOB_TITLES[index % len(DEMO_JOB_TITLES)]
+
+def _ensure_demo_job_assignments(rows):
+    """Keep demo ATS records useful for presentations by avoiding one job for every row.
+
+    Real candidate records with an explicit job_applied value are preserved. If an
+    older demo run stored several candidates under the same generic job, diversify
+    only those legacy rows using the project's available job titles.
+    """
+    if len(rows) < 2:
+        return rows
+    jobs = [str(r.get("job_applied") or "").strip() for r in rows]
+    nonempty = [j for j in jobs if j]
+    if nonempty and len(set(nonempty)) == 1:
+        for i, row in enumerate(rows):
+            row["job_applied"] = DEMO_JOB_TITLES[i % len(DEMO_JOB_TITLES)]
+    else:
+        for i, row in enumerate(rows):
+            if not str(row.get("job_applied") or "").strip():
+                row["job_applied"] = DEMO_JOB_TITLES[i % len(DEMO_JOB_TITLES)]
+    return rows
+
+def _load_mock_ats():
+    try:
+        rows = json.loads(MOCK_ATS_FILE.read_text(encoding="utf8"))
+        if not isinstance(rows, list):
+            return []
+        normalized = _ensure_demo_job_assignments(rows)
+        if normalized != rows:
+            _save_mock_ats(normalized)
+        return normalized
+    except Exception:
+        return []
+
+def _save_mock_ats(rows):
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    tmp = MOCK_ATS_FILE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(rows, indent=2), encoding="utf8")
+    tmp.replace(MOCK_ATS_FILE)
+
+@app.post("/api/ats/add_candidate")
+def mock_ats_add_candidate():
+    """Create or update a candidate in the bundled ATS API.
+
+    The endpoint behaves like a real ATS upsert: email is the stable external
+    identifier, so syncing the same candidate never creates duplicates.
+    """
+    payload=request.get_json(silent=True) or {}
+    required=["name","email","job_applied","status"]
+    missing=[x for x in required if not str(payload.get(x,"")).strip()]
+    if missing:
+        return jsonify(success=False,error=f"Missing fields: {', '.join(missing)}"),400
+    rows=_load_mock_ats()
+    email=str(payload.get("email","")).strip().casefold()
+    row={k:payload.get(k,"") for k in required}
+    row.update({"email":str(row["email"]).strip(),"name":str(row["name"]).strip(),"job_applied":str(row["job_applied"]).strip(),"status":str(row["status"]).strip()})
+    existing=next((i for i,r in enumerate(rows) if str(r.get("email","")).strip().casefold()==email),None)
+    if existing is None:
+        row["created_at"]=datetime.now().isoformat(timespec="seconds")
+        rows.append(row); action="created"
+    else:
+        rows[existing].update(row); row=rows[existing]; action="updated"
+    row["updated_at"]=datetime.now().isoformat(timespec="seconds")
+    _save_mock_ats(rows)
+    return jsonify(success=True,action=action,candidate=row,message=f"Candidate {row['name']} {action} in ATS.")
+@app.get("/api/ats/list_candidates")
+def mock_ats_list_candidates():
+    return jsonify(_load_mock_ats())
+
 @app.put("/api/ats/update_status/<path:email>")
 def mock_ats_update_status(email):
     payload=request.get_json(silent=True) or {}
@@ -1219,6 +1916,40 @@ def save_ats_config():
     cfg={"provider":provider,"base_url":base_url,"api_key":api_key,"status":status}
     ATS_FILE.write_text(json.dumps(cfg,indent=2),encoding="utf8")
     return jsonify(success=True, config={**cfg, "api_key":"••••••••" if api_key else ""})
+
+@app.get("/api/ats/demo/health")
+def demo_ats_health():
+    """Health check for the built-in Demo ATS used by the Interview Assistant."""
+    try:
+        rows = _load_mock_ats()
+        return jsonify(success=True, connected=True, mode="demo", count=len(rows),
+                       status="Demo ATS is connected and ready.")
+    except Exception as exc:
+        return jsonify(success=False, connected=False, error=f"Demo ATS unavailable: {exc}"), 500
+
+@app.get("/api/ats/demo/candidates")
+def demo_ats_candidates():
+    """Return candidates stored by the built-in Demo ATS."""
+    return jsonify(success=True, candidates=_load_mock_ats())
+
+@app.post("/api/ats/test")
+def ats_test():
+    cfg=load_ats_config()
+    # Built-in Demo ATS is always available; no second server is required.
+    # Treat it as demo mode even if an old/stale base URL exists in ats_config.json.
+    if str(cfg.get("provider", "Demo ATS")).casefold() == "demo ats" or not cfg.get("base_url"):
+        return jsonify(success=True, mode="demo", status="Demo ATS connection successful. The built-in ATS is ready.")
+    try:
+        test_url = cfg["base_url"].rstrip("/")
+        # The bundled FastAPI mock exposes GET /ats/list_candidates while its
+        # write endpoint is POST /ats/add_candidate. Test the read endpoint when
+        # an explicit write endpoint is configured.
+        if test_url.endswith("/ats/add_candidate"):
+            test_url = test_url[:-len("/ats/add_candidate")] + "/ats/list_candidates"
+        req=urllib.request.Request(test_url, headers={
+            "Authorization": f"Bearer {cfg.get('api_key','')}",
+            "Accept":"application/json"
+        })
         with urllib.request.urlopen(req, timeout=5) as resp:
             return jsonify(success=True, mode="external", status=f"Connection successful (HTTP {resp.status}).")
     except Exception as exc:
@@ -1334,5 +2065,3 @@ def too_large(_):
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-    
