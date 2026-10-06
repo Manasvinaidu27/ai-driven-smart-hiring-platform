@@ -13,4 +13,3 @@ streamlit
 plotly
 SpeechRecognition
 pyttsx3
-  
