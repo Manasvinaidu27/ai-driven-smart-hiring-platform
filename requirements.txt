@@ -9,3 +9,7 @@ spacy
 scikit-learn
 requests
 reportlab
+streamlit
+plotly
+SpeechRecognition
+pyttsx3
